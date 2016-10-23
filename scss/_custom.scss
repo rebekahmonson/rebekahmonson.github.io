@@ -73,7 +73,7 @@ body{
     background: rgba($black, .5);
     height: 100%;
     h1{
-      font-size: 3.5rem;
+      font-size: 3rem;
       color: $white;
       text-shadow: 2px 2px 6px #000;
       @include breakpoint(medium){
@@ -89,7 +89,7 @@ body{
       background-color: $black;
       width: 80%;
       text-align: center;
-      margin: 1rem auto;
+      margin: .5rem auto;
       @include breakpoint(medium){
         margin: 1rem auto;
       }
