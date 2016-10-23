@@ -1290,7 +1290,7 @@ a {
   line-height: inherit;
   cursor: pointer; }
   a:hover, a:focus {
-    color: #f4c62c; }
+    color: #deae0c; }
   a img {
     border: 0; }
 
@@ -4080,6 +4080,20 @@ table.hover tbody tr:nth-of-type(even):hover {
 
 /***************** end padding and margin settings *************/
 /* custom */
+body {
+  font-size: 1.2rem;
+  line-height: 2rem; }
+
+.circle-image {
+  width: 90%;
+  border-radius: 50%;
+  float: right;
+  margin: 1rem 5%; }
+  @media screen and (min-width: 40em) {
+    .circle-image {
+      width: 30%;
+      margin: 2rem 3rem; } }
+
 .font-light {
   font-weight: 200; }
 
@@ -4109,39 +4123,68 @@ table.hover tbody tr:nth-of-type(even):hover {
   .top-bar ul {
     background-color: #0a0a0a; }
 
+.container {
+  padding: 5%; }
+
 #intro {
   height: 100vh;
-  background: url(../img/trees.jpg) no-repeat center center fixed;
-  background-size: cover; }
-  #intro h2 {
-    padding: 2rem; }
-  #intro h1 {
-    font-size: 3.5rem;
-    color: #fefefe;
-    text-align: center;
+  background: url(../img/trees2.jpg) no-repeat center center fixed;
+  background-size: cover;
+  text-align: center; }
+  #intro .container {
     position: relative;
-    top: 2.5rem;
-    text-transform: uppercase;
-    text-shadow: 2px 2px 6px #000; }
+    top: 0;
+    left: 0;
+    background: rgba(10, 10, 10, 0.5);
+    height: 100%; }
+    #intro .container h1 {
+      font-size: 3.5rem;
+      color: #fefefe;
+      text-shadow: 2px 2px 6px #000; }
+      @media screen and (min-width: 40em) {
+        #intro .container h1 {
+          font-size: 5rem;
+          padding-top: 20%; } }
+    #intro .container p {
+      font-family: "Stint Ultra Expanded";
+      font-size: 1.5rem;
+      padding: 1rem;
+      color: #fefefe;
+      background-color: #0a0a0a;
+      width: 80%;
+      text-align: center;
+      margin: 1rem auto; }
+      @media screen and (min-width: 40em) {
+        #intro .container p {
+          margin: 1rem auto; } }
+      #intro .container p span {
+        color: #f6d258; }
 
 #about {
-  height: 100vh;
-  background-color: grey; }
+  background-color: #fefefe; }
+  #about .container a {
+    font-weight: 700;
+    text-decoration: underline; }
+  #about .container .button {
+    margin: 2rem 0;
+    color: #fff;
+    text-decoration: none; }
+  #about .container .menu a {
+    text-decoration: none;
+    font-size: 1.2rem; }
 
-#projects {
-  height: 100vh;
-  background-color: red; }
+#projects .container {
+  background-color: #f6d258; }
 
-#contact {
-  height: 100vh;
-  background-color: blue; }
+#contact .container {
+  color: #fefefe;
+  background: url(../img/city.jpg) no-repeat center center fixed;
+  background-size: cover; }
 
 section h1 {
-  padding: 3rem 2rem;
   font-size: 2em; }
   @media screen and (min-width: 40em) {
     section h1 {
-      padding: 2rem;
       font-size: 3.5em; } }
 
 footer {

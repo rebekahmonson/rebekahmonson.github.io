@@ -1,4 +1,4 @@
-
+$primary-color: #f6d258;
 h1, h2, h3, h4, h5, h6 {
   
   @media #{$medium-up} {
@@ -6,7 +6,20 @@ h1, h2, h3, h4, h5, h6 {
   @media #{$large-up} {
   }
 }
-
+body{
+  font-size: 1.2rem;
+  line-height: 2rem;
+}
+.circle-image{
+  width: 90%;
+  border-radius: 50%;
+  float: right;
+  margin: 1rem 5%;
+  @include breakpoint(medium){
+    width: 30%;
+    margin: 2rem 3rem;
+  }
+}
 //helper for font weight
 //Open+Sans:400,700,800|Raleway:400,200,700
 .font-light {
@@ -42,44 +55,91 @@ h1, h2, h3, h4, h5, h6 {
     background-color: $black;
   }
 }
+.container{
+  padding: 5%;
+}
 #intro{
   height: 100vh;
-  background: url(../img/trees.jpg) no-repeat center center fixed; 
+  background: url(../img/trees2.jpg) no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  h2{
-    padding: 2rem; 
-  }
-  h1{
-    font-size: 3.5rem;
-    color: $white;
-    text-align: center;
+  text-align: center;
+  .container{
     position: relative;
-    top: 2.5rem;
-    text-transform: uppercase;
-    text-shadow: 2px 2px 6px #000;
+    top: 0;
+    left: 0;
+    background: rgba($black, .5);
+    height: 100%;
+    h1{
+      font-size: 3.5rem;
+      color: $white;
+      text-shadow: 2px 2px 6px #000;
+      @include breakpoint(medium){
+        font-size: 5rem;
+        padding-top: 20%;
+      }
+    }
+    p{
+      font-family: $header-font-family;
+      font-size: 1.5rem;
+      padding: 1rem; 
+      color: $white;
+      background-color: $black;
+      width: 80%;
+      text-align: center;
+      margin: 1rem auto;
+      @include breakpoint(medium){
+        margin: 1rem auto;
+      }
+      span{
+        color: $primary-color;
+      }
+    }
   }
 }
 #about{
-  height: 100vh;
-   background-color: grey;
+  background-color: $white;
+  .container{
+    a{
+      font-weight: 700;
+      text-decoration: underline;
+    }
+    .button{
+      margin: 2rem 0;
+      color: #fff;
+      text-decoration: none;
+    }
+    .menu a{
+      text-decoration: none;
+      font-size: 1.2rem;
+
+      @include breakpoint(medium){
+
+      }
+    }
+  }
 }
 #projects{
-  height: 100vh;
-   background-color: red;
+  .container{
+    background-color: $primary-color;
+  }
 }
 #contact{
-  height: 100vh;
-   background-color: blue;
+  .container{
+    color: $white;
+    background: url(../img/city.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
 }
 section{
   h1{
-    padding: 3rem 2rem;
     font-size: 2em;
     @include breakpoint(medium){
-      padding: 2rem;
       font-size: 3.5em;
     }
   }
