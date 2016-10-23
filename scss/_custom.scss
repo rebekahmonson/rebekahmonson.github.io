@@ -60,7 +60,7 @@ body{
 }
 #intro{
   height: 100vh;
-  background: url(../img/trees2.jpg) no-repeat center center fixed; 
+  background: url(/img/trees2.jpg) no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -129,7 +129,7 @@ body{
 #contact{
   .container{
     color: $white;
-    background: url(../img/city.jpg) no-repeat center center fixed; 
+    background: url(/img/city.jpg) no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

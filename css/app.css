@@ -4128,7 +4128,7 @@ body {
 
 #intro {
   height: 100vh;
-  background: url(../img/trees2.jpg) no-repeat center center fixed;
+  background: url(/img/trees2.jpg) no-repeat center center fixed;
   background-size: cover;
   text-align: center; }
   #intro .container {
@@ -4178,7 +4178,7 @@ body {
 
 #contact .container {
   color: #fefefe;
-  background: url(../img/city.jpg) no-repeat center center fixed;
+  background: url(/img/city.jpg) no-repeat center center fixed;
   background-size: cover; }
 
 section h1 {
