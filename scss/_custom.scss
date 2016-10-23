@@ -1,3 +1,4 @@
+
 h1, h2, h3, h4, h5, h6 {
   
   @media #{$medium-up} {
@@ -20,22 +21,6 @@ h1, h2, h3, h4, h5, h6 {
 .font-heavy {
   font-weight: 800;
 }
-#intro{
-  height: 100vh;
-  background-color: white;
-}
-#about{
-  height: 100vh;
-   background-color: grey;
-}
-#projects{
-  height: 100vh;
-   background-color: red;
-}
-#contact{
-  height: 100vh;
-   background-color: blue;
-}
 .top-bar{
   background-color: $black;
   .top-bar-title{
@@ -49,10 +34,45 @@ h1, h2, h3, h4, h5, h6 {
     @include breakpoint(medium) {
       margin-top: .5rem;
     }
+    .active{
+      color: scale-color($anchor-color, $lightness: -14%);
+    }
   }
   ul{
     background-color: $black;
   }
+}
+#intro{
+  height: 100vh;
+  background: url(../img/trees.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  h2{
+    padding: 2rem; 
+  }
+  h1{
+    font-size: 3.5rem;
+    color: $white;
+    text-align: center;
+    position: relative;
+    top: 2.5rem;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 6px #000;
+  }
+}
+#about{
+  height: 100vh;
+   background-color: grey;
+}
+#projects{
+  height: 100vh;
+   background-color: red;
+}
+#contact{
+  height: 100vh;
+   background-color: blue;
 }
 section{
   h1{
@@ -60,7 +80,14 @@ section{
     font-size: 2em;
     @include breakpoint(medium){
       padding: 2rem;
+      font-size: 3.5em;
     }
   }
+}
+footer{
+  width: 100%;
+  background-color: $black;
+  font-size: 80%;
+  font-weight: 700;
 }
 

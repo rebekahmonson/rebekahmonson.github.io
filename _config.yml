@@ -5,9 +5,13 @@ keyword : journalism, technology, miami, cities, millennials, engagement, human-
 url : http://rebekahmonson.github.io/
 email : rebekah@whereby.us
 twitter : rsm
+facebook : rebekahmonson
+medium : rsm
 github : rebekahmonson
 author : Rebekah Monson
 year : 2016
 markdown : kramdown
 exclude :
   - node_modules
+gems:
+  - jemoji
