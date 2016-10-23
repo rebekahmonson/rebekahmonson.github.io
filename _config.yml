@@ -1,12 +1,12 @@
-name : Foundation5/github pages/Jykill starter
-brand : My Project
-description : This is the description of my project
-keyword : 
-url : http://daigofuji.github.io/jekyll-foundation-6-starter/
-email : daigo@daigofujiwara.com
-twitter : DaigoFuji
-github : DaigoFuji
-author : Daigo Fujiwara
+name : RebekahMonson.com
+brand : Rebekah Monson
+description : Technologist, Journalist, Designer, Urbanist, Dork
+keyword : journalism, technology, miami, cities, millennials, engagement, human-centered design
+url : http://rebekahmonson.github.io/
+email : rebekah@whereby.us
+twitter : rsm
+github : rebekahmonson
+author : Rebekah Monson
 year : 2016
 markdown : kramdown
 exclude :

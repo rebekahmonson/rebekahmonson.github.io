@@ -1,5 +1,5 @@
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 200;
+  
   @media #{$medium-up} {
   }
   @media #{$large-up} {
@@ -20,16 +20,47 @@ h1, h2, h3, h4, h5, h6 {
 .font-heavy {
   font-weight: 800;
 }
-
-.quiet {
-  font-size: 80%;
+#intro{
+  height: 100vh;
+  background-color: white;
 }
-
-.title-bar {
-  box-shadow: 0 0 10px rgba(138, 138, 138, 0.3);
-
-  .title-bar-title {
+#about{
+  height: 100vh;
+   background-color: grey;
+}
+#projects{
+  height: 100vh;
+   background-color: red;
+}
+#contact{
+  height: 100vh;
+   background-color: blue;
+}
+.top-bar{
+  background-color: $black;
+  .top-bar-title{
+    font-family: $titlebar-brand-font;
+    font-size: 1.5rem;
+  }
+  .top-bar-right{
     font-weight: 800;
+    background-color: $black;
+    margin-top: -.5rem;
+    @include breakpoint(medium) {
+      margin-top: .5rem;
+    }
+  }
+  ul{
+    background-color: $black;
+  }
+}
+section{
+  h1{
+    padding: 3rem 2rem;
+    font-size: 2em;
+    @include breakpoint(medium){
+      padding: 2rem;
+    }
   }
 }
 
