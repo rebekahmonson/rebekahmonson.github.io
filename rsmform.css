@@ -1,0 +1,38 @@
+/* - - - - - - - - - - - - - - - - - - - - -
+
+ Title : rsm
+ Author : rebekah monson
+ URL : http://rebekahmonson.com
+
+ Last Updated : Jan. 4, 2017
+
+- - - - - - - - - - - - - - - - - - - - - */
+
+/* header */
+#header{
+	display:none;
+}
+
+/* Backgrounds */
+html{background:none}
+#container{background:none}
+.wufoo input.text, .wufoo textarea.textarea{background:#FFFFFF; border:none;}
+.wufoo .focused{background:none;}
+.wufoo .instruct{background-color:none;}
+
+/* Borders */
+#container{border:none;}
+.wufoo .info{border: none;}
+.wufoo .instruct{border:none;}
+
+/* Typography */
+.wufoo .info h2{font-size:160%;font-family:inherit;color:#FFFFFF}
+.wufoo .info div{font-size:95%;font-family:inherit;color:#FFFFFF}
+.wufoo .section h3{font-size:110%;font-family:inherit;background:none;color:#FFFFFF}
+.wufoo .section div{font-size:85%;font-family:inherit;color:#FFFFFF}
+.wufoo label.desc, .wufoo legend.desc{font-size:95%;font-family:inherit;color:#FFFFFF}
+.wufoo li div, .wufoo li div label, .wufoo li span label{font-family:inherit;color:#FFFFFF}
+.wufoo input.text, .wufoo textarea.textarea, .wufoo select.select, .wufoo label.choice{font-size:100%;font-family:inherit;color:#FFFFFF}
+.wufoo label.choice{color:#FFFFFF}
+.wufoo .instruct{font-size:80%;font-family:inherit;color:#FFFFFF
+}
