@@ -36,6 +36,9 @@ body{
 }
 .top-bar{
   background-color: $black;
+  .menu > li > a {
+      font-size: 1rem;
+  }
   .top-bar-title{
     font-family: $titlebar-brand-font;
     font-size: 1.5rem;
@@ -116,7 +119,6 @@ body{
     }
     .menu a{
       text-decoration: none;
-      font-size: 1.2rem;
 
       @include breakpoint(medium){
 
@@ -128,6 +130,9 @@ body{
   .container{
     background-color: $primary-color;
   }
+  .column-block{
+    padding: 2em 3em 2em 0;
+  }
 }
 #contact{
   .container{
@@ -137,9 +142,15 @@ body{
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-  }
-  header{
-    display: none;
+    label{
+      color: #ffffff;
+      font-size: 1em;
+      font-weight: bold;
+    }
+    .button{
+      font-weight: bold;
+      color: #000000;
+    }
   }
 }
 section{

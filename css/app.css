@@ -4108,6 +4108,8 @@ body {
 
 .top-bar {
   background-color: #0a0a0a; }
+  .top-bar .menu > li > a {
+    font-size: 1rem; }
   .top-bar .top-bar-title {
     font-family: "Stint Ultra Expanded";
     font-size: 1.5rem; }
@@ -4173,19 +4175,25 @@ body {
     color: #fff;
     text-decoration: none; }
   #about .container .menu a {
-    text-decoration: none;
-    font-size: 1.2rem; }
+    text-decoration: none; }
 
 #projects .container {
   background-color: #f6d258; }
+
+#projects .column-block {
+  padding: 2em 3em 2em 0; }
 
 #contact .container {
   color: #fefefe;
   background: url(/img/city.jpg) no-repeat center center fixed;
   background-size: cover; }
-
-#contact header {
-  display: none; }
+  #contact .container label {
+    color: #ffffff;
+    font-size: 1em;
+    font-weight: bold; }
+  #contact .container .button {
+    font-weight: bold;
+    color: #000000; }
 
 section h1 {
   font-size: 2em; }
