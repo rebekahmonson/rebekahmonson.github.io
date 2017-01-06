@@ -44,6 +44,7 @@
             </div>
             <div class="top-bar-right">
               {% include nav.html %}
+
             </div>
           </nav>
         </div>
@@ -51,6 +52,12 @@
 
     <div class="content">
       {{content}}
+      {% include intro.html %}
+      {% include about.html %}
+      {% include projects.html %}
+      {% include blog.html %}
+      {% include contact.html %}
+      {% include footer.html %}
     </div><!-- end content-->
     
     <!-- Loading JavaScripts
@@ -63,6 +70,38 @@
     <script src="bower_components/foundation-sites/dist/plugins/foundation.magellan.js"></script>
     <script src="bower_components/foundation-sites/dist/plugins/foundation.sticky.js"></script>
     <script src="js/app.js"></script>
+    
+    <!-- Display rss -->
+    <script src="js/jquery.rss.min.js"></script>
+    <script type="text/javascript">
+    jQuery(function($) {
+        $("#blog-feed").rss(
+          "https://medium.com/feed/@rsm",
+          {
+            // how many entries do you want?
+            // default: 4
+            // valid values: any integer
+            limit: 4,
+            ssl: true,
+
+            // outer template for the html transformation
+            // default: "<ul>{entries}</ul>"
+            // valid values: any string
+            layoutTemplate: "<div class='feed-container'>{entries}</div>",
+
+            // inner template for each entry
+            // default: '<li><a href="{url}">[{author}@{date}] {title}</a><br/>{shortBodyPlain}</li>'
+            // valid values: any string
+            entryTemplate: '<div class="row entry"><div class="small-12 medium-4 columns"><a href="{url}"><div class="box seven-five"><div class="content"><img src="{teaserImageUrl}"></div></div></a></div><div class="small-12 medium-8 columns"><a href="{url}"><h3>{title}</h3></a><p>{shortBody}…</p></div></div>',
+          },
+
+          // callback function
+          // called after feeds are successfully loaded and after animations are done
+          function callback() {
+          }
+        )
+      })
+    </script>
 
     <!-- Google Analytics CHANGE THIS TO YOUR UA CODE-->
     <script>
