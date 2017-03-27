@@ -116,7 +116,7 @@
 
 
         // Instantiate a countdown FlipClock
-        clock = $('.clock').FlipClock(0, {
+        clock = $('.clock').FlipClock(diff, {
           clockFace: 'DailyCounter',
           countdown: true,
           minimumDigits: 9,
@@ -125,8 +125,6 @@
                     $('.notyet').hide();
                     $('.clock').hide();
                     $('.next').show();
-                    clock.setTime( nextDiff );
-                    clock.start();
                 }
             }
         });
