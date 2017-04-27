@@ -6,7 +6,9 @@ margin:0;
 padding:0;
 vertical-align:baseline;
 }
-
+.pink{
+	color: #f4428f;
+}
 article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section {
 display:block;
 }
@@ -26,6 +28,9 @@ ul{
 }
 a{
 	color:#f4428f;
+}
+a:hover{
+	color: #a90a4f;
 }
 
 #cv {
@@ -50,6 +55,7 @@ a{
 	font-weight: 700;
 	font-family: 'Stint Ultra Expanded', Helvetica, Arial, sans-serif;
 	margin-bottom: 1rem;
+	line-height: 2.8rem;
 }
 
 #name h2 {
@@ -86,24 +92,25 @@ a{
 
 #contactDetails ul {
 	list-style-type: none;
-	font-size: .5rem;
+	margin-top: 0;
 	line-height: 1.5rem;
-	margin-top: 2px;
 }
 
 #contactDetails ul li {
-	margin-bottom: 3px;
+	margin-bottom: 0;
 	color: #444;
 }
 
 #contactDetails ul li a, a[href^=tel] {
 	color: #444; 
 	text-decoration: none;
+	font-size: .8rem;
+	color: #f4428f;
+	text-decoration: underline;
 }
 
 #contactDetails ul li a:hover { 
-	color: #f4428f;
-	
+	color: #a90a4f;
 }
 #tech{
 	height: auto;
@@ -141,6 +148,7 @@ section:last-child {
 	font-family: 'Stint Ultra Expanded', Helvetica, Arial, sans-serif;
 	font-size: 1.5em;
 	color: #f4428f;
+	line-height: 3.5rem;
 }
 
 .sectionContent h2 {
@@ -229,10 +237,6 @@ section:last-child {
 	column-count:1;
 	}
 	
-	#name h1 {
-		line-height: .8em;
-		margin-bottom: 4px;
-	}
 }
 
 @media print {
@@ -242,7 +246,6 @@ section:last-child {
 	}
 	h1, h2, .sectionTitle h1{
 		color: #222;
-		margin-bottom: 1.5rem !important;
 	}
 	a{
 		text-decoration: none;

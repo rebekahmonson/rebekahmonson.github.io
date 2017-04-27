@@ -4367,12 +4367,14 @@ ul {
   margin-top: 2px; }
 
 #contactDetails ul li {
-  margin-bottom: 3px;
+  margin-bottom: 0;
   color: #444; }
 
 #contactDetails ul li a, a[href^=tel] {
   color: #444;
-  text-decoration: none; }
+  text-decoration: none;
+  padding: 0;
+  margin: 0; }
 
 #contactDetails ul li a:hover {
   color: #f4428f; }
