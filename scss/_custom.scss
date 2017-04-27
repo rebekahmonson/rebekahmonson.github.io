@@ -1,3 +1,6 @@
+$primary-color: #f4428f;
+$header-font-family: 'Stint Ultra Expanded';
+
 @mixin aspect-ratio($width, $height) {
   position: relative;
   &:before {
@@ -19,9 +22,9 @@
   @include aspect-ratio(7, 5);
 }
 
-$primary-color: #f6d258;
+
 h1, h2, h3, h4, h5, h6 {
-  
+  font-family: $header-font-family;
   @media #{$medium-up} {
   }
   @media #{$large-up} {
@@ -30,16 +33,22 @@ h1, h2, h3, h4, h5, h6 {
 body{
   font-size: 1.2rem;
   line-height: 2rem;
+  overflow-x: hidden; 
 }
 .circle-image{
   width: 90%;
   border-radius: 50%;
-  float: right;
-  margin: 1rem 5%;
-  @include breakpoint(medium){
-    width: 30%;
-    margin: 2rem 3rem;
-  }
+}
+.group{
+    float: right;
+    margin: 1rem 5%;
+    @include breakpoint(medium){
+      width: 30%;
+      margin: 2rem 3rem;
+    }
+}
+.about-text{
+  margin-top: 5%;
 }
 //helper for font weight
 //Open+Sans:400,700,800|Raleway:400,200,700
@@ -58,21 +67,26 @@ body{
 .top-bar{
   background-color: $black;
   .menu > li > a {
-      font-size: 1rem;
+      font-size: .8rem;
   }
-  .top-bar-title{
+  .title-bar-title{
     font-family: $titlebar-brand-font;
-    font-size: 1.5rem;
+    font-size: 1.6rem;
+    line-height: 1.6rem;
   }
   .top-bar-right{
     font-weight: 800;
     background-color: $black;
     margin-top: -.5rem;
+    padding-left: 0;
     @include breakpoint(medium) {
       margin-top: .5rem;
     }
+    .menu > li > a{
+      padding-left: .7rem;
+    }
     .active{
-      color: scale-color($anchor-color, $lightness: -14%);
+      color: scale-color($anchor-color, $lightness: -25%);
     }
   }
   ul{
@@ -84,7 +98,8 @@ body{
 }
 #intro{
   height: 100vh;
-  background: url(/img/trees2.jpg) no-repeat center center fixed; 
+  padding: 0;
+  background: url(/img/miami.jpg) no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -94,12 +109,14 @@ body{
     position: relative;
     top: 0;
     left: 0;
-    background: rgba($black, .5);
+    background: rgba($black, .3);
     height: 100%;
     h1{
       font-size: 3rem;
       color: $white;
+      font-family: $header-font-family;
       text-shadow: 2px 2px 6px #000;
+      padding-top: .5rem;
       @include breakpoint(medium){
         font-size: 5rem;
         padding-top: 15%;
@@ -108,6 +125,7 @@ body{
     p{
       font-family: $header-font-family;
       font-size: 1.5rem;
+      line-height: 1.8rem;
       padding: 1rem; 
       color: $white;
       background-color: $black;
@@ -122,6 +140,7 @@ body{
       }
       span{
         color: $primary-color;
+        font-size: 1.5rem;
       }
     }
   }
@@ -141,7 +160,8 @@ body{
     }
     .menu a{
       text-decoration: none;
-
+      padding-left: 0;
+      padding-right: 2rem;
       @include breakpoint(medium){
 
       }
@@ -149,18 +169,26 @@ body{
   }
 }
 #projects{
+  border: none;
   .container{
     background-color: $primary-color;
+    color: $white;
   }
   .column-block{
     padding: 2rem;
   }
   a{
-    color: #000000;
-    text-decoration: underline;
+    color: $black;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    font-family: $header-font-family;
+    text-decoration: none;
   }
   a:hover{
     color: #444;
+  }
+  p{
+    color: $white;
   }
 }
 #blog{
@@ -170,13 +198,16 @@ body{
   }
 }
 #contact{
+  border: none;
   .container{
-    color: $white;
     background: url(/img/city.jpg) no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+    p{
+      color: $white;
+    }
     label{
       color: #ffffff;
       font-size: 1em;
@@ -187,7 +218,7 @@ body{
       color: #000000;
       text-align: center;
     }
-    h3{
+    h1, h3{
       margin-top: 2rem;
       color: $primary-color;
     }
@@ -200,18 +231,34 @@ body{
 }
 section{
   h1{
-    font-size: 2em;
+    font-size: 2.3em;
+    margin-top: 1rem;
     text-align: center;
+    font-family: $header-font-family;
     @include breakpoint(medium){
       font-size: 3.5em;
     }
   }
+  h3{
+    font-size: 1.6em;
+    font-family: $header-font-family;
+    margin-bottom: 1rem;
+  }
+  overflow: hidden;
 }
 
 footer{
   width: 100%;
   background-color: $black;
-  font-size: .8em;
-  font-weight: 700;
+  font-size: .6em;
+  font-weight: bold;
+  .menu > li > a{
+    font-size: .7rem;
+    font-weight: bold;
+  }
+}
+li:first-child{
+  margin-left: 0;
+  padding-left: 0;
 }
 
