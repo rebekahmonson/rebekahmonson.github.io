@@ -142,7 +142,7 @@ section:last-child {
 .sectionContent h2 {
 	font-family: 'Stint Ultra Expanded', Helvetica, Arial, sans-serif;
 	font-size: 1.5em;
-	margin-bottom: -2px;
+	margin-bottom: .5rem;
 }
 
 .subDetails {
@@ -152,6 +152,11 @@ section:last-child {
 .company {
 	font-size: 1rem;
 	margin: 1rem 0 0 0;
+}
+.subtle{
+	color: #444;
+	font-size: 1rem;
+	line-height: 1.5rem;
 }
 
 @media all and (min-width: 602px) and (max-width: 800px) {
@@ -229,8 +234,7 @@ section:last-child {
 @media print {
 	body{
 		color: #222;
-		font-size: .8rem;
-		line-height: 1rem;
+		font-size: 50%;
 	}
 	h1, h2, .sectionTitle h1{
 		color: #222;
@@ -261,5 +265,5 @@ section:last-child {
     li.socialLink {
     	display:none !important;
     }
-
+    
 }
