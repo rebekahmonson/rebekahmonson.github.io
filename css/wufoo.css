@@ -35,6 +35,8 @@ html.embed{background: none;}
 .wufoo input.text, .wufoo textarea.textarea, .wufoo select.select, .wufoo label.choice{font-size:100%;font-family:inherit;color:#333;}
 .wufoo label.choice{color:#fff;}
 .wufoo li.focused label.desc, .wufoo li.focused legend.desc, .wufoo li.focused div, .wufoo li.focused span, .wufoo li.focused div label, .wufoo li.focused span label, .safari .wufoo li.focused input.file{color: #fff;}
+.wufoo .confirm h2{ color: #fff; font-size: 1.5rem; }
+
 
  /* error message */
  .wufoo .error li.desc{  color: #fff !important;}
