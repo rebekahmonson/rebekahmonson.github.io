@@ -40,7 +40,7 @@ html.embed{background: none;}
 
  /* error message */
  .wufoo .error li.desc{  color: #fff !important;}
- .wufoo #errorLi{ background: none; border: none; }
+ .wufoo #errorLi{ display: none !important; }
  .wufoo #errorMsg{ display: none; }
  .wufoo li.error{ background-color: none !important; }
 
