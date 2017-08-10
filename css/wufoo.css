@@ -41,7 +41,7 @@ html.embed{background: none;}
  /* error message */
  .wufoo .error li.desc{  color: #fff !important;}
  .wufoo #errorLi{ display: none !important; }
- .wufoo #errorMsg{ display: none; }
+ .wufoo #errorMsg{ display: none !important; }
  .wufoo li.error{ background-color: none !important; }
 
  /* button */
