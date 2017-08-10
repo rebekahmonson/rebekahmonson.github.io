@@ -19,6 +19,7 @@ html.embed{background: none;}
 #container{background: none;}
 .wufoo input.text, .wufoo textarea.textarea{background:#FFFFFF;}
 .wufoo li.focused{background: none;}
+.wufoo li.focused label.desc {color: #fff;}
 .wufoo .instruct{background-color:#F5F5F5}
 .wufoo #errorLi .error-container{ background: none; }
 
@@ -44,11 +45,13 @@ html.embed{background: none;}
 .wufoo li.buttons .submit{
  	background: #f4428f;
     border: none;
+    font-weight: bold;
     padding: 1em;
     font-family: inherit;
 }
 .wufoo input.btTxt{
 	background: #f4428f;
+	font-weight: bold;
     border: none;
     padding: 1em;
     font-family: inherit;
