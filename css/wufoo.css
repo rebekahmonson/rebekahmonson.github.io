@@ -38,8 +38,9 @@ html.embed{background: none;}
 
  /* error message */
  .wufoo .error li.desc{  color: #fff !important;}
- .wufoo #errorLi .error-container{ background: none; border: none; }
- .wufoo #errorMsg p{ display: none; }
+ .wufoo #errorLi{ background: none; border: none; }
+ .wufoo #errorMsg{ display: none; }
+ .wufoo li.error{ background-color: none !important; }
 
  /* button */
 .wufoo li.buttons .submit{
