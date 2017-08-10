@@ -29,11 +29,11 @@ html{background: none;}
 .wufoo #errorLi .error-container{ border: none; }
 
 /* Typography */
-.wufoo label.desc, .wufoo legend.desc{font-size:95%;font-family:inherit;color:#fff}
-.wufoo li div, .wufoo li div label, .wufoo li span label{font-family:inherit;color:#444444}
-.wufoo input.text, .wufoo textarea.textarea, .wufoo select.select, .wufoo label.choice{font-size:100%;font-family:inherit;color:#333333}
-.wufoo label.choice{color:#444444}
-.wufoo .instruct{font-size:80%;font-family:inherit;color:#444444
+.wufoo label.desc, .wufoo legend.desc{font-size:95%;font-family:inherit;color:#fff;}
+.wufoo li div, .wufoo li div label, .wufoo li span label{font-family:inherit;color:#fff;}
+.wufoo input.text, .wufoo textarea.textarea, .wufoo select.select, .wufoo label.choice{font-size:100%;font-family:inherit;color:#fff;}
+.wufoo label.choice{color:#fff;}
+
 }
  /* error message */
  .wufoo .error li.desc{  color: #fff !important;}
@@ -41,7 +41,7 @@ html{background: none;}
  .wufoo #errorMsg p{ display: none; }
 
  /* button */
- .wufoo #saveform {
+ .wufoo li.buttons .submit{
  	background: #f4428f;
     border: none;
     padding: 1em;
