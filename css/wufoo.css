@@ -41,9 +41,15 @@ html{background: none;}
  .wufoo #errorMsg p{ display: none; }
 
  /* button */
- .wufoo li.buttons .submit{
+.wufoo li.buttons .submit{
  	background: #f4428f;
     border: none;
     padding: 1em;
     font-family: inherit;
- }
+}
+.wufoo input.btTxt{
+	background: #f4428f;
+    border: none;
+    padding: 1em;
+    font-family: inherit;
+}
