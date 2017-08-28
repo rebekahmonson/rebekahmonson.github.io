@@ -1,0 +1,70 @@
+---
+layout: charts
+title: WBU newsletter data
+description: 
+---
+
+
+<div class="row">
+  <div class="large-12 columns">
+    <section>
+      <div class="container row small-12 columns small-centered">
+        <h1>The New Tropic</h1>
+        <h3>Total recipients</h3>
+      </div>
+    </section>
+    <section>
+      <div class="container row small-12 columns small-centered">
+        <h1>The Evergrey</h2>
+        &nbsp;
+        <strong> Total subscribers</strong>
+        <canvas id="teg-subs" width="800" height="450"></canvas>
+        <script>
+          new Chart(document.getElementById("teg-subs"), {
+          type: 'line',
+          data: {
+            labels: ['9/16', '10/16', '11/16', '12/16', '1/17', '2/17', '3/17', '4/17', '5/17', '6/17', '7/17', '8/17'],
+            datasets: [{ 
+                data: [287, 1738, 2329, 2672, 3096, 2672, 3096, 3418, 3564, 3952, 4163, 4354, 4445, 4924],
+                label: "Total subscribers",
+                borderColor: "#3e95cd",
+                fill: false
+              }
+            ]
+          },
+        });
+        </script>
+        &nbsp;<br/>&nbsp;<br/>
+        <strong> Average daily open and click rates</strong>
+        <canvas id="teg-rates" width="800" height="450"></canvas>
+        <script>
+          new Chart(document.getElementById("teg-rates"), {
+          type: 'line',
+          data: {
+            labels: ['9/16', '10/16', '11/16', '12/16', '1/17', '2/17', '3/17', '4/17', '5/17', '6/17', '7/17', '8/17'],
+            datasets: [{ 
+                data: [70.96, 60.73, 52.91, 48.32, 50.41, 46.12, 45.02, 46.76, 45.68, 43.20, 42.87, 42.76],
+                label: "Average daily open rate",
+                borderColor: "#8e5ea2",
+                fill: false
+              }, { 
+                data: [23.30, 14.05, 11.16, 10.16, 10.91, 11.31, 10.68, 10.95, 9.76, 9.13, 10.28, 9.47],
+                label: "Average daily click rate",
+                borderColor: "#3cba9f",
+                fill: false
+              }
+            ]
+          },
+          options: {
+            title: {
+              display: false,
+              text: 'World population per region (in millions)'
+            }
+          }
+        });
+        </script>
+      </div>
+    </section>
+  </div>
+</div>
+        
