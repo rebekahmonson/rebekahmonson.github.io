@@ -10,7 +10,54 @@ description:
     <section>
       <div class="container row small-12 columns small-centered">
         <h1>The New Tropic</h1>
-        <h3>Total recipients</h3>
+        &nbsp;
+        <strong> Total subscribers</strong>
+        <canvas id="tnt-subs" width="800" height="450"></canvas>
+        <script>
+          new Chart(document.getElementById("tnt-subs"), {
+          type: 'line',
+          data: {
+            labels: ['1/15','2/15','3/15','4/15','5/15','6/15','7/15','8/15','9/15', '10/15', '11/15', '12/15','1/16','2/16','3/16','4/16','5/16','6/16','7/16','8/16','9/16', '10/16', '11/16', '12/16','1/17','2/17','3/17','4/17','5/17','6/17','7/17', '8/17'],
+            datasets: [{ 
+                data: [ 0, 552, 822, 1559, 1946, 2531, 2985, 3532, 4160, 4481, 4844, 5556, 5893, 6166, 6499, 6874, 7532, 8119, 12222, 12944, 13090, 13308, 13845, 14095, 14124, 14205, 14260, 14314, 14281, 19819, 19820, 20542],
+                label: "Total subscribers",
+                borderColor: "#3e95cd",
+                fill: false
+              }
+            ]
+          },
+        });
+        </script>
+        &nbsp;<br/>&nbsp;<br/>&nbsp;<br/>&nbsp;<br/>
+        <strong> Average daily open and click rates</strong>
+        <canvas id="tnt-rates" width="800" height="450"></canvas>
+        <script>
+          new Chart(document.getElementById("tnt-rates"), {
+          type: 'line',
+          data: {
+            labels: ['9/16', '10/16', '11/16', '12/16', '1/17', '2/17', '3/17', '4/17', '5/17', '6/17', '7/17', '8/17'],
+            datasets: [{ 
+                data: [70.96, 60.73, 52.91, 48.32, 50.41, 46.12, 45.02, 46.76, 45.68, 43.20, 42.87, 42.76],
+                label: "Average daily open rate (%)",
+                borderColor: "#8e5ea2",
+                fill: false
+              }, { 
+                data: [23.30, 14.05, 11.16, 10.16, 10.91, 11.31, 10.68, 10.95, 9.76, 9.13, 10.28, 9.47],
+                label: "Average daily click rate (%)",
+                borderColor: "#3cba9f",
+                fill: false
+              }
+            ]
+          },
+          options: {
+            title: {
+              display: false,
+              text: 'World population per region (in millions)'
+            }
+          }
+        });
+        </script>
+        &nbsp;<br/>&nbsp;<br/>
       </div>
     </section>
     <section>
@@ -34,7 +81,7 @@ description:
           },
         });
         </script>
-        &nbsp;<br/>&nbsp;<br/>
+        &nbsp;<br/>&nbsp;<br/>&nbsp;<br/>&nbsp;<br/>
         <strong> Average daily open and click rates</strong>
         <canvas id="teg-rates" width="800" height="450"></canvas>
         <script>
