@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WBU Stats</title>
+    <link rel="stylesheet" href="css/charts.css">
+    <style>
+      body{
+        background-color: #fefefe;
+        background-repeat: repeat;
+        font-family: Helvetica,sans-serif;
+        color: #fff;
+      }
+      
+      #content{
+        width: 80%;
+        margin-right: auto;
+        margin-left: auto;
+      }
+      h1 {
+        font-size: 3rem;
+        color:#FA07DA;
+      }
+      h2 {
+        font-size: 2rem;
+        color: #05FAF6;
+        margin-bottom: 2em;
+      }
+      h3 {
+        font-size: 1.5rem;
+      }
+      p{
+        font-size: .7rem;
+        line-height: 1rem;
+      }
+      a{
+
+      }
+      .flip-clock-divider .flip-clock-label{
+        color: white;
+      }
+      .flip-clock-wrapper{
+        margin: 0 0 4em 0;
+      }
+      .next{
+        
+      }
+      .notyet{
+        display: none;
+      }
+      @media all and (min-width: 200px) {
+        .clock{
+          display: none;
+          zoom: 0.35;
+          -moz-transform: scale(0.35)
+        }
+      }
+      @media all and (min-width: 400px) {
+        .clock{
+          zoom: 0.4;
+          -moz-transform: scale(0.4)
+        }
+      }
+      @media all and (min-width: 600px) {
+        .clock{
+          zoom: 0.6;
+          -moz-transform: scale(0.6)
+        }
+      }
+
+      @media all and (min-width: 650px) {
+          .clock{
+          zoom: .7;
+          -moz-transform: scale(0.7)
+        }
+      }
+    </style>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="js/flipclock.min.js" type="text/javascript"></script>
+    
+  </head>
+  <body>
+    <div id="content">
+      <h1>Is Ultra Fucking Over Yet?</h1>
+      <h2 class="notyet">Not fucking yet.</h2>
+      <h2 class="next"> Yes, it is fucking over.</h2>
+      <h3 class="next">See you in 2018, Molly. </h3>
+      <div class="clock"></div>
+      <h3 class="notyet">
+        until it's fucking over.
+      </h3>
+      
+      <p>Made with &#9829; for Miami by <a href="https://twitter.com/rsm" target="_blank">@rsm.</a> </p>
+      <p>If you love Miami too, please check out my day job at <a href="http://thenewtropic.com" target="_blank">The New Tropic,</a> and LIVE LIKE YOU LIVE HERE.</p>
+    </div>
+    <script>
+      var clock;
+
+      $(document).ready(function() {
+
+        // Grab the current date
+        var currentDate = new Date();
+
+        // Set date Ultra ends in UTC
+        var futureDate  = new Date("Wed Mar 27 2017 00:00:00 GMT-0400");
+        //var nextDate = new Date(Date.UTC(2017, 11, 1, 0, 0, 0));
+
+        // Calculate the difference in seconds between the future and current date
+        //var testDiff = 5;
+        var diff = futureDate.getTime() / 1000 - currentDate.getTime() / 1000;
+        //var nextDiff = nextDate.getTime() / 1000 - currentDate.getTime() / 1000;
+
+
+        // Instantiate a countdown FlipClock
+        clock = $('.clock').FlipClock(diff, {
+          clockFace: 'DailyCounter',
+          countdown: true,
+          minimumDigits: 9,
+          callbacks: {
+                stop: function() {
+                    $('.notyet').hide();
+                    $('.clock').hide();
+                    $('.next').show();
+                }
+            }
+        });
+      });
+    </script>
+
+  </body>
+</html>
