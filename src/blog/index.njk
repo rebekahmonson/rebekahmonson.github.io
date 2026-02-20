@@ -1,0 +1,26 @@
+---
+layout: base.njk
+title: Blog
+description: Thoughts on media, technology, community building, and civic life.
+permalink: /blog/
+---
+
+<section class="blog-list section">
+  <div class="container container--narrow">
+    <p class="section-label">Blog</p>
+    <h1 class="section-heading">Thoughts &amp; ideas <span class="emoji-hover" data-animation="float">&#x1F4AD;</span></h1>
+
+    {% set posts = collections.blog %}
+    {% if posts.length > 0 %}
+      {% for post in posts %}
+      <div class="blog-list-item">
+        <time datetime="{{ post.date | isoDate }}">{{ post.date | readableDate }}</time>
+        <h2><a href="{{ post.url }}">{{ post.data.title }}</a></h2>
+        {% if post.data.excerpt %}<p>{{ post.data.excerpt }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    {% else %}
+      <p style="color: var(--color-muted);">New posts coming soon. Stay tuned!</p>
+    {% endif %}
+  </div>
+</section>
