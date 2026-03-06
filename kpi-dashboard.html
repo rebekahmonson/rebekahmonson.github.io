@@ -638,7 +638,7 @@ function inferUnit(metricName, definition) {
   if (n.includes('velocity-share')) return 'Ratio';
   if (n.includes('nps') || n.includes('csat') || n.includes('quality')) return 'Score';
   if (n.includes('lead time') || n.includes('time to close')) return 'Days';
-  if (n.includes('time to first value')) return 'Minutes';
+  if (n.includes('time to first value')) return 'Days';
   if (d.includes('percentage') || d.includes('%')) return 'Percentage';
   if (d.includes('dollar') || d.includes('$') || d.includes('arr')) return 'US Dollars';
   return 'Number';
@@ -869,12 +869,12 @@ function processData(rows) {
 
 function getTrend(entries) {
   const vals = entries.map(e => parseValue(e.value)).filter(v => v !== null);
-  if (vals.length < 2) return 'flat';
+  if (vals.length < 2) return { dir: 'flat', pct: null };
   const last = vals[vals.length - 1];
   const prev = vals[vals.length - 2];
-  if (last > prev) return 'up';
-  if (last < prev) return 'down';
-  return 'flat';
+  const pct = prev !== 0 ? ((last - prev) / Math.abs(prev)) * 100 : null;
+  const dir = last > prev ? 'up' : last < prev ? 'down' : 'flat';
+  return { dir, pct };
 }
 
 function renderFilters() {
@@ -943,10 +943,13 @@ function renderDashboard(byMetric) {
       const latestEntry = entries[entries.length - 1];
       const val = parseValue(latestEntry.value);
       const target = parseValue(latestEntry.target);
-      const trend = getTrend(entries);
+      const trendObj = getTrend(entries);
+      const trend = trendObj.dir;
+      const trendPct = trendObj.pct;
       const trendIcon = trend === 'up' ? '&#9650;' : trend === 'down' ? '&#9660;' : '&#9654;';
       const isNPSorNeg = metric === 'NPS' || metric.includes('burn');
       const trendClass = trend === 'up' ? (isNPSorNeg ? 'trend-up' : 'trend-up') : trend === 'down' ? (isNPSorNeg ? 'trend-down' : 'trend-down') : 'trend-flat';
+      const pctLabel = trendPct !== null ? (trendPct >= 0 ? '+' : '') + trendPct.toFixed(1) + '%' : '';
       const starBadge = meta.type === 'North Star' ? ' &#9733;' : '';
 
       const defTip = meta.definition ? `<span class="info-bubble">i<span class="info-tip">${meta.definition.replace(/"/g, '&quot;').replace(/</g, '&lt;')}${meta.owner ? '<div class="info-owner">Owner: ' + meta.owner.replace(/</g, '&lt;') + '</div>' : ''}</span></span>` : '';
@@ -956,7 +959,7 @@ function renderDashboard(byMetric) {
           <div class="label" title="${metric}"><span class="label-text">${metric}${starBadge}</span>${defTip}</div>
           <div class="value">${formatValue(val, meta.unit)}</div>
           <div class="meta">
-            <span class="${trendClass}">${trendIcon}</span>
+            <span class="${trendClass}">${trendIcon}${pctLabel ? ' ' + pctLabel : ''}</span>
             ${target !== null ? `<span class="target">Target: ${formatValue(target, meta.unit)}</span>` : ''}
           </div>
           ${!showDeptHeaders ? `<span class="dept-tag ${deptStyle.class}">${meta.dept}</span>` : ''}
@@ -983,9 +986,11 @@ function renderDashboard(byMetric) {
 
     // Group related metrics into chart groupings
     const velocityMetrics = deptMetrics.filter(m => m.startsWith('Velocity-Share'));
-    const otherMetrics = deptMetrics.filter(m => !m.startsWith('Velocity-Share'));
+    const otherNS = deptMetrics.filter(m => !m.startsWith('Velocity-Share') && META[m] && META[m].type === 'North Star');
+    const otherKPI = deptMetrics.filter(m => !m.startsWith('Velocity-Share') && !(META[m] && META[m].type === 'North Star'));
+    const otherMetrics = [...otherNS, ...otherKPI];
 
-    // Individual charts for each non-velocity metric
+    // Individual charts for each non-velocity metric (North Stars first)
     otherMetrics.forEach(metric => {
       const canvasId = 'chart_' + metric.replace(/[^a-zA-Z0-9]/g, '_');
       const meta = META[metric] || { unit: '' };
@@ -1028,7 +1033,9 @@ function renderDashboard(byMetric) {
     const deptColor = DEPT_COLORS[dept] || DEPT_COLORS['All-Company'];
 
     const velocityMetrics = deptMetrics.filter(m => m.startsWith('Velocity-Share'));
-    const otherMetrics = deptMetrics.filter(m => !m.startsWith('Velocity-Share'));
+    const otherNS = deptMetrics.filter(m => !m.startsWith('Velocity-Share') && META[m] && META[m].type === 'North Star');
+    const otherKPI = deptMetrics.filter(m => !m.startsWith('Velocity-Share') && !(META[m] && META[m].type === 'North Star'));
+    const otherMetrics = [...otherNS, ...otherKPI];
 
     otherMetrics.forEach((metric, idx) => {
       const canvasId = 'chart_' + metric.replace(/[^a-zA-Z0-9]/g, '_');
