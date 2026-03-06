@@ -130,6 +130,8 @@
     border-radius: 12px;
     padding: 16px;
     transition: transform 0.15s, border-color 0.15s;
+    overflow: visible;
+    position: relative;
   }
   .kpi-card:hover {
     transform: translateY(-2px);
@@ -142,9 +144,17 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    position: relative;
+  }
+  .kpi-card .label-text {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
   }
 
   .kpi-card .value {
@@ -900,7 +910,7 @@ function renderDashboard(byMetric) {
 
     html += `
       <div class="kpi-card">
-        <div class="label" title="${metric}">${metric}${starBadge} ${defTip}</div>
+        <div class="label" title="${metric}"><span class="label-text">${metric}${starBadge}</span>${defTip}</div>
         <div class="value">${formatValue(val, meta.unit)}</div>
         <div class="meta">
           <span class="${trendClass}">${trendIcon}</span>
