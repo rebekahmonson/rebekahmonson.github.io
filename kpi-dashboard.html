@@ -263,6 +263,61 @@
     display: none;
   }
 
+  /* Info tooltip */
+  .info-bubble {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 600;
+    cursor: help;
+    flex-shrink: 0;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+  .info-bubble:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .info-bubble .info-tip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.5;
+    width: 260px;
+    max-width: 90vw;
+    z-index: 100;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    pointer-events: none;
+    white-space: normal;
+    text-transform: none;
+    letter-spacing: normal;
+  }
+  .info-bubble .info-tip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--border);
+  }
+  .info-bubble:hover .info-tip { display: block; }
+  .info-tip .info-owner { color: var(--text-muted); font-size: 11px; margin-top: 6px; }
+
   @media (max-width: 768px) {
     .container, .header, .filters { padding-left: 16px; padding-right: 16px; }
     .chart-grid { grid-template-columns: 1fr; }
@@ -284,93 +339,7 @@
     border: 1px solid var(--border);
     border-radius: 16px;
     padding: 48px 40px;
-    text-align: center;
-    max-width: 400px;
-    width: 90%;
-  }
-
-  .login-card h1 {
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-
-  .login-card p {
-    color: var(--text-muted);
-    font-size: 14px;
-    margin-bottom: 32px;
-    line-height: 1.5;
-  }
-
-  .login-card .g_id_signin {
-    display: inline-block;
-  }
-
-  .login-error {
-    color: var(--red);
-    font-size: 13px;
-    margin-top: 16px;
-    display: none;
-  }
-
-  .app-wrap { display: none; }
-  .app-wrap.authenticated { display: block; }
-
-  .user-info {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--text-muted);
-  }
-
-  .user-info img {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-  }
-
-  .logout-btn {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-    padding: 4px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 12px;
-  }
-
-  .logout-btn:hover { border-color: var(--text-muted); }
-</style>
-</head>
-<body>
-
-<!-- Login Screen -->
-<div class="login-overlay" id="loginOverlay">
-  <div class="login-card">
-    <h1>Letterhead KPIs</h1>
-    <p>Sign in with your @tryletterhead.com Google account to view the dashboard.</p>
-    <button id="googleSignInBtn" onclick="startGoogleSignIn()" style="
-      display: inline-flex; align-items: center; gap: 12px;
-      background: #131314; color: #e3e3e3; border: 1px solid #747775;
-      border-radius: 20px; padding: 10px 20px; font-size: 14px;
-      font-family: 'Google Sans', Roboto, sans-serif; cursor: pointer;
-      transition: background 0.2s;
-    ">
-      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-      Sign in with Google
-    </button>
-    <div class="login-error" id="loginError"></div>
-  </div>
-</div>
-
-<!-- Dashboard (hidden until auth) -->
-<div class="app-wrap" id="appWrap">
-<div class="header">
-  <div class="header-left">
-    <h1>Letterhead KPI Dashboard</h1>
-    <p id="lastUpdated">Connecting to Google Sheets...</p>
-  </div>
+    text-v>
   <div class="header-right">
     <div class="user-info" id="userInfo"></div>
     <div class="status-dot" id="statusDot"></div>
@@ -602,6 +571,7 @@ async function fetchDefinitions() {
       type: type || 'KPI',
       unit: inferUnit(metricName, definition),
       owner: owner,
+      definition: definition,
     };
   });
 
@@ -837,9 +807,11 @@ function renderDashboard(byMetric) {
     const trendClass = trend === 'up' ? (isNPSorNeg ? 'trend-up' : 'trend-up') : trend === 'down' ? (isNPSorNeg ? 'trend-down' : 'trend-down') : 'trend-flat';
     const starBadge = meta.type === 'North Star' ? ' &#9733;' : '';
 
+    const defTip = meta.definition ? `<span class="info-bubble">i<span class="info-tip">${meta.definition.replace(/"/g, '&quot;').replace(/</g, '&lt;')}${meta.owner ? '<div class="info-owner">Owner: ' + meta.owner.replace(/</g, '&lt;') + '</div>' : ''}</span></span>` : '';
+
     html += `
       <div class="kpi-card">
-        <div class="label" title="${metric}">${metric}${starBadge}</div>
+        <div class="label" title="${metric}">${metric}${starBadge} ${defTip}</div>
         <div class="value">${formatValue(val, meta.unit)}</div>
         <div class="meta">
           <span class="${trendClass}">${trendIcon}</span>
@@ -874,9 +846,10 @@ function renderDashboard(byMetric) {
     otherMetrics.forEach(metric => {
       const canvasId = 'chart_' + metric.replace(/[^a-zA-Z0-9]/g, '_');
       const meta = META[metric] || { unit: '' };
+      const chartTip = meta.definition ? `<span class="info-bubble">i<span class="info-tip">${meta.definition.replace(/"/g, '&quot;').replace(/</g, '&lt;')}${meta.owner ? '<div class="info-owner">Owner: ' + meta.owner.replace(/</g, '&lt;') + '</div>' : ''}</span></span>` : '';
       html += `
         <div class="chart-card">
-          <h3>${metric}</h3>
+          <h3>${metric} ${chartTip}</h3>
           <div class="chart-subtitle">${meta.type === 'North Star' ? '&#9733; North Star' : 'KPI'} &middot; ${meta.unit || 'Value'}</div>
           <div class="chart-wrap"><canvas id="${canvasId}"></canvas></div>
         </div>`;
@@ -1055,6 +1028,79 @@ function renderDashboard(byMetric) {
   });
 }
 
+async function re        }
+            }
+          }
+        }
+      });
+    });
+
+    // Velocity stacked bar chart
+    if (velocityMetrics.length > 0) {
+      const canvas = document.getElementById('chart_velocity');
+      if (canvas) {
+        // Collect all dates
+        const allDates = new Set();
+        velocityMetrics.forEach(m => byMetric[m].forEach(e => allDates.add(e.date)));
+        const sortedDates = [...allDates].sort((a, b) => parseDate(a) - parseDate(b));
+        const labels = sortedDates.map(d => { const p = parseDate(d); return p ? formatDate(p) : d; });
+
+        const shortNames = {
+          'Velocity-Share for Open ESP Integrations - Specifically': 'ESP Integrations',
+          'Velocity-Share for Sales Engineering': 'Sales Eng',
+          'Velocity-Share for Service': 'Service',
+          'Velocity-Share for Letterhead Core': 'Core Product'
+        };
+        const vColors = ['#6c63ff', '#00d4aa', '#ffa94d', '#ff6b8a'];
+
+        const datasets = velocityMetrics.map((m, i) => {
+          const entries = byMetric[m];
+          const dateMap = {};
+          entries.forEach(e => dateMap[e.date] = parseValue(e.value));
+          return {
+            label: shortNames[m] || m,
+            data: sortedDates.map(d => dateMap[d] !== undefined ? dateMap[d] * 100 : null),
+            backgroundColor: vColors[i % vColors.length] + 'cc',
+            borderColor: vColors[i % vColors.length],
+            borderWidth: 1,
+            borderRadius: 3,
+          };
+        });
+
+        charts['chart_velocity'] = new Chart(canvas, {
+          type: 'bar',
+          data: { labels, datasets },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { intersect: false, mode: 'index' },
+            plugins: {
+              legend: { position: 'top', labels: { boxWidth: 10, padding: 8, font: { size: 10 } } },
+              tooltip: {
+                backgroundColor: '#1a1d27',
+                borderColor: '#2d3141',
+                borderWidth: 1,
+                padding: 10,
+                cornerRadius: 8,
+                callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(0)}%` }
+              }
+            },
+            scales: {
+              x: { stacked: true, grid: { display: false }, ticks: { font: { size: 11 } } },
+              y: {
+                stacked: true,
+                grid: { color: 'rgba(45,49,65,0.4)' },
+                ticks: { font: { size: 11 }, callback: v => v + '%' },
+                max: 100
+              }
+            }
+          }
+        });
+      }
+    }
+  });
+}
+
 async function refreshData() {
   const statusDot = document.getElementById('statusDot');
   const statusText = document.getElementById('statusText');
@@ -1073,7 +1119,7 @@ async function refreshData() {
     // Also assign META for any tracker metrics not in Definitions
     Object.keys(byMetric).forEach(m => {
       if (!META[m]) {
-        META[m] = { dept: 'Other', type: 'KPI', unit: inferUnit(m, ''), owner: '' };
+        META[m] = { dept: 'Other', type: 'KPI', unit: inferUnit(m, ''), owner: '', definition: '' };
       }
     });
 
