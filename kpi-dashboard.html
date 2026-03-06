@@ -223,6 +223,32 @@
     height: 240px;
   }
 
+  .card-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 20px 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .card-section-title:first-child {
+    margin-top: 0;
+  }
+
+  .card-section-title .icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+  }
+
   .section-title {
     font-size: 16px;
     font-weight: 700;
@@ -886,40 +912,58 @@ function renderDashboard(byMetric) {
 
   let html = '';
 
-  // ── KPI Summary Cards ──
-  html += '<div class="kpi-grid">';
-  // Show North Stars first, then KPIs
-  const northStars = metrics.filter(m => META[m] && META[m].type === 'North Star');
-  const kpis = metrics.filter(m => !northStars.includes(m));
-  const orderedMetrics = [...northStars, ...kpis];
+  // ── KPI Summary Cards (grouped by department) ──
+  const cardDeptOrder = ['All-Company', 'Revenue/GTM', 'Product', 'Engineering', 'Support/CX', 'CX', 'Finance', 'Operations', 'Other'];
+  const cardDeptIcons = { 'All-Company': '&#9733;', 'Revenue/GTM': '&#128200;', 'Product': '&#9881;', 'Engineering': '&#128736;', 'Support/CX': '&#128172;', 'CX': '&#128172;', 'Finance': '&#128176;', 'Operations': '&#9881;', 'Other': '&#9679;' };
 
-  orderedMetrics.forEach(metric => {
-    const entries = byMetric[metric];
-    const meta = META[metric] || { dept: 'Other', unit: '', type: 'KPI' };
-    const deptStyle = DEPT_COLORS[meta.dept] || DEPT_COLORS['All-Company'];
-    const latestEntry = entries[entries.length - 1];
-    const val = parseValue(latestEntry.value);
-    const target = parseValue(latestEntry.target);
-    const trend = getTrend(entries);
-    const trendIcon = trend === 'up' ? '&#9650;' : trend === 'down' ? '&#9660;' : '&#9654;';
-    const isNPSorNeg = metric === 'NPS' || metric.includes('burn');
-    const trendClass = trend === 'up' ? (isNPSorNeg ? 'trend-up' : 'trend-up') : trend === 'down' ? (isNPSorNeg ? 'trend-down' : 'trend-down') : 'trend-flat';
-    const starBadge = meta.type === 'North Star' ? ' &#9733;' : '';
+  const showDeptHeaders = activeFilter === 'all';
 
-    const defTip = meta.definition ? `<span class="info-bubble">i<span class="info-tip">${meta.definition.replace(/"/g, '&quot;').replace(/</g, '&lt;')}${meta.owner ? '<div class="info-owner">Owner: ' + meta.owner.replace(/</g, '&lt;') + '</div>' : ''}</span></span>` : '';
+  cardDeptOrder.forEach(dept => {
+    const deptMetrics = byDept[dept];
+    if (!deptMetrics || deptMetrics.length === 0) return;
+    const deptColor = DEPT_COLORS[dept] || DEPT_COLORS['All-Company'];
 
-    html += `
-      <div class="kpi-card">
-        <div class="label" title="${metric}"><span class="label-text">${metric}${starBadge}</span>${defTip}</div>
-        <div class="value">${formatValue(val, meta.unit)}</div>
-        <div class="meta">
-          <span class="${trendClass}">${trendIcon}</span>
-          ${target !== null ? `<span class="target">Target: ${formatValue(target, meta.unit)}</span>` : ''}
-        </div>
-        <span class="dept-tag ${deptStyle.class}">${meta.dept}</span>
+    // Sort: North Stars first within each department
+    const northStars = deptMetrics.filter(m => META[m] && META[m].type === 'North Star');
+    const kpis = deptMetrics.filter(m => !northStars.includes(m));
+    const orderedMetrics = [...northStars, ...kpis];
+
+    if (showDeptHeaders) {
+      html += `<div class="card-section-title">
+        <span class="icon" style="background:${deptColor.bg}">${cardDeptIcons[dept] || '&#9679;'}</span>
+        ${dept}
       </div>`;
+    }
+
+    html += '<div class="kpi-grid">';
+    orderedMetrics.forEach(metric => {
+      const entries = byMetric[metric];
+      const meta = META[metric] || { dept: 'Other', unit: '', type: 'KPI' };
+      const deptStyle = DEPT_COLORS[meta.dept] || DEPT_COLORS['All-Company'];
+      const latestEntry = entries[entries.length - 1];
+      const val = parseValue(latestEntry.value);
+      const target = parseValue(latestEntry.target);
+      const trend = getTrend(entries);
+      const trendIcon = trend === 'up' ? '&#9650;' : trend === 'down' ? '&#9660;' : '&#9654;';
+      const isNPSorNeg = metric === 'NPS' || metric.includes('burn');
+      const trendClass = trend === 'up' ? (isNPSorNeg ? 'trend-up' : 'trend-up') : trend === 'down' ? (isNPSorNeg ? 'trend-down' : 'trend-down') : 'trend-flat';
+      const starBadge = meta.type === 'North Star' ? ' &#9733;' : '';
+
+      const defTip = meta.definition ? `<span class="info-bubble">i<span class="info-tip">${meta.definition.replace(/"/g, '&quot;').replace(/</g, '&lt;')}${meta.owner ? '<div class="info-owner">Owner: ' + meta.owner.replace(/</g, '&lt;') + '</div>' : ''}</span></span>` : '';
+
+      html += `
+        <div class="kpi-card">
+          <div class="label" title="${metric}"><span class="label-text">${metric}${starBadge}</span>${defTip}</div>
+          <div class="value">${formatValue(val, meta.unit)}</div>
+          <div class="meta">
+            <span class="${trendClass}">${trendIcon}</span>
+            ${target !== null ? `<span class="target">Target: ${formatValue(target, meta.unit)}</span>` : ''}
+          </div>
+          ${!showDeptHeaders ? `<span class="dept-tag ${deptStyle.class}">${meta.dept}</span>` : ''}
+        </div>`;
+    });
+    html += '</div>';
   });
-  html += '</div>';
 
   // ── Charts by Department ──
   const deptOrder = ['All-Company', 'Revenue/GTM', 'Product', 'Engineering', 'Support/CX', 'CX', 'Finance', 'Operations', 'Other'];
