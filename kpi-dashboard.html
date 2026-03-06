@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Letterhead KPI Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232733;
+    --border: #2d3141;
+    --text: #e4e6ed;
+    --text-muted: #8b8fa3;
+    --accent: #6c63ff;
+    --accent2: #00d4aa;
+    --accent3: #ff6b8a;
+    --accent4: #ffa94d;
+    --accent5: #4dabf7;
+    --green: #00d4aa;
+    --red: #ff6b8a;
+    --yellow: #ffa94d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .header-left h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .header-left p {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .status-text { color: var(--text-muted); font-size: 13px; }
+
+  .btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn:hover { background: var(--border); }
+
+  .filters {
+    display: flex;
+    gap: 8px;
+    padding: 16px 32px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  .container { padding: 0 32px 32px; }
+
+  /* KPI Summary Cards */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    transition: transform 0.15s, border-color 0.15s;
+  }
+  .kpi-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+  }
+
+  .kpi-card .label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .kpi-card .value {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .kpi-card .meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    font-size: 12px;
+  }
+
+  .kpi-card .target { color: var(--text-muted); }
+  .kpi-card .trend-up { color: var(--green); }
+  .kpi-card .trend-down { color: var(--red); }
+  .kpi-card .trend-flat { color: var(--yellow); }
+
+  .kpi-card .dept-tag {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-top: 8px;
+  }
+  .dept-product { background: rgba(108,99,255,0.15); color: #a29bfe; }
+  .dept-revenue { background: rgba(0,212,170,0.15); color: #00d4aa; }
+  .dept-support { background: rgba(255,107,138,0.15); color: #ff6b8a; }
+  .dept-finance { background: rgba(255,169,77,0.15); color: #ffa94d; }
+  .dept-all { background: rgba(77,171,247,0.15); color: #4dabf7; }
+
+  /* Chart Grid */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .chart-card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .chart-card .chart-subtitle {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .chart-wrap {
+    position: relative;
+    height: 240px;
+  }
+
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 28px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title .icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+  }
+
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .error-banner {
+    background: rgba(255,107,138,0.1);
+    border: 1px solid rgba(255,107,138,0.3);
+    color: var(--red);
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .container, .header, .filters { padding-left: 16px; padding-right: 16px; }
+    .chart-grid { grid-template-columns: 1fr; }
+    .kpi-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  }
+  /* Login screen */
+  .login-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .login-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 48px 40px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+  }
+
+  .login-card h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .login-card p {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 32px;
+    line-height: 1.5;
+  }
+
+  .login-card .g_id_signin {
+    display: inline-block;
+  }
+
+  .login-error {
+    color: var(--red);
+    font-size: 13px;
+    margin-top: 16px;
+    display: none;
+  }
+
+  .app-wrap { display: none; }
+  .app-wrap.authenticated { display: block; }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .user-info img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+  }
+
+  .logout-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 4px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+
+  .logout-btn:hover { border-color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <h1>Letterhead KPIs</h1>
+    <p>Sign in with your @tryletterhead.com Google account to view the dashboard.</p>
+    <div id="g_id_onload"
+         data-client_id="351754476942-cukvoeppmd2pgqp5nidqjl67a4pjcnqm.apps.googleusercontent.com"
+         data-context="signin"
+         data-ux_mode="popup"
+         data-callback="handleGoogleSignIn"
+         data-auto_prompt="false">
+    </div>
+    <div class="g_id_signin"
+         data-type="standard"
+         data-shape="rectangular"
+         data-theme="filled_black"
+         data-text="signin_with"
+         data-size="large"
+         data-logo_alignment="left">
+    </div>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- Dashboard (hidden until auth) -->
+<div class="app-wrap" id="appWrap">
+<div class="header">
+  <div class="header-left">
+    <h1>Letterhead KPI Dashboard</h1>
+    <p id="lastUpdated">Connecting to Google Sheets...</p>
+  </div>
+  <div class="header-right">
+    <div class="user-info" id="userInfo"></div>
+    <div class="status-dot" id="statusDot"></div>
+    <span class="status-text" id="statusText">Loading</span>
+    <button class="btn" onclick="refreshData()">&#8635; Refresh</button>
+    <button class="logout-btn" onclick="handleSignOut()">Sign out</button>
+  </div>
+</div>
+
+<div class="filters" id="filters"></div>
+
+<div class="container">
+  <div class="error-banner" id="errorBanner"></div>
+  <div id="content">
+    <div class="loading">
+      <div class="spinner"></div>
+      <span style="color:var(--text-muted);font-size:14px;">Fetching live data from Google Sheets...</span>
+    </div>
+  </div>
+</div>
+</div><!-- /app-wrap -->
+
+<script>
+const GOOGLE_CLIENT_ID = '351754476942-cukvoeppmd2pgqp5nidqjl67a4pjcnqm.apps.googleusercontent.com';
+const ALLOWED_DOMAIN = 'tryletterhead.com';
+
+function handleGoogleSignIn(response) {
+  try {
+    const payload = JSON.parse(atob(response.credential.split('.')[1]));
+    const email = payload.email || '';
+    const domain = email.split('@')[1];
+    if (domain !== ALLOWED_DOMAIN) {
+      const errEl = document.getElementById('loginError');
+      errEl.textContent = 'Access restricted to @' + ALLOWED_DOMAIN + ' accounts. You signed in as ' + email;
+      errEl.style.display = 'block';
+      return;
+    }
+    // Auth success
+    document.getElementById('loginOverlay').style.display = 'none';
+    const appWrap = document.getElementById('appWrap');
+    appWrap.style.display = 'block';
+    appWrap.classList.add('authenticated');
+    // Show user info
+    const userInfoEl = document.getElementById('userInfo');
+    if (payload.picture) {
+      userInfoEl.innerHTML = '<img src="' + payload.picture + '" alt=""> ' + (payload.name || email);
+    } else {
+      userInfoEl.textContent = email;
+    }
+    // Store credential for session
+    sessionStorage.setItem('gsi_token', response.credential);
+    // Now load the dashboard data
+    init();
+  } catch (e) {
+    console.error('Sign-in error:', e);
+    const errEl = document.getElementById('loginError');
+    errEl.textContent = 'Sign-in failed. Please try again.';
+    errEl.style.display = 'block';
+  }
+}
+
+function handleSignOut() {
+  sessionStorage.removeItem('gsi_token');
+  google.accounts.id.disableAutoSelect();
+  document.getElementById('appWrap').style.display = 'none';
+  document.getElementById('appWrap').classList.remove('authenticated');
+  document.getElementById('loginOverlay').style.display = 'flex';
+  document.getElementById('loginError').style.display = 'none';
+  // Clear charts
+  document.getElementById('content').innerHTML = '<div class="loading"><div class="spinner"></div><span style="color:var(--text-muted);font-size:14px;">Sign in to view data...</span></div>';
+}
+
+// Check for existing session on load
+window.addEventListener('load', function() {
+  const token = sessionStorage.getItem('gsi_token');
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const exp = payload.exp * 1000;
+      if (Date.now() < exp && payload.email && payload.email.endsWith('@' + ALLOWED_DOMAIN)) {
+        handleGoogleSignIn({ credential: token });
+        return;
+      }
+    } catch(e) {}
+    sessionStorage.removeItem('gsi_token');
+  }
+});
+
+const SHEET_ID = '1g8FOuKK14xUkL8S8pwKJG-fBdEeyn65dugJn_GYTRrg';
+const TRACKER_GID = '1637880674';
+
+// Metric metadata (from Definitions tab)
+const META = {
+  'Net New CARR':          { dept: 'All-Company', type: 'North Star', unit: 'US Dollars', owner: 'Mallory Newcomer' },
+  'Monthly burn vs plan':  { dept: 'Finance', type: 'KPI', unit: 'Percentage', owner: 'Mallory Newcomer' },
+  'New customers signed':  { dept: 'Revenue/GTM', type: 'North Star', unit: 'Number', owner: 'Brian Wiechowski' },
+  'Pipeline Coverage Deals': { dept: 'Revenue/GTM', type: 'KPI', unit: 'Number', owner: 'Brian Wiechowski' },
+  'Pipeline Coverage ARR': { dept: 'Revenue/GTM', type: 'KPI', unit: 'US Dollars', owner: 'Brian Wiechowski' },
+  'Win rate':              { dept: 'Revenue/GTM', type: 'KPI', unit: 'Percentage', owner: 'Brian Wiechowski' },
+  '[ICP Deals Created Past Validation Stage]': { dept: 'Revenue/GTM', type: 'KPI', unit: 'Number', owner: 'Brian Wiechowski' },
+  'NPS':                   { dept: 'Support/CX', type: 'North Star', unit: 'Score', owner: 'Michael Schofield' },
+  'CSAT':                  { dept: 'Support/CX', type: 'KPI', unit: 'Score', owner: 'Michael Schofield' },
+  'Time to First Value':   { dept: 'Support/CX', type: 'North Star', unit: 'Minutes', owner: 'Michael Schofield' },
+  'Support Ticket Time to Close': { dept: 'Support/CX', type: 'KPI', unit: 'Days', owner: 'Michael Schofield' },
+  'Support Resolution Quality': { dept: 'Support/CX', type: 'KPI', unit: 'Score', owner: 'Michael Schofield' },
+  'Open Crits':            { dept: 'Support/CX', type: 'KPI', unit: 'Number', owner: 'Michael Schofield' },
+  'Feature Cadence':       { dept: 'Product', type: 'KPI', unit: 'Number', owner: 'Michael Schofield' },
+  'Feature Lead Time':     { dept: 'Product', type: 'KPI', unit: 'Days', owner: 'Michael Schofield' },
+  'Weekly active channels':{ dept: 'Product', type: 'North Star', unit: 'Number', owner: 'Michael Schofield' },
+  'Global Open Rate':      { dept: 'All-Company', type: 'KPI', unit: 'Percentage', owner: '' },
+  'Velocity-Share for Open ESP Integrations - Specifically': { dept: 'Product', type: 'KPI', unit: 'Ratio', owner: '' },
+  'Velocity-Share for Sales Engineering': { dept: 'Product', type: 'KPI', unit: 'Ratio', owner: '' },
+  'Velocity-Share for Service':           { dept: 'Product', type: 'KPI', unit: 'Ratio', owner: '' },
+  'Velocity-Share for Letterhead Core':   { dept: 'Product', type: 'KPI', unit: 'Ratio', owner: '' },
+};
+
+const DEPT_COLORS = {
+  'Product': { bg: 'rgba(108,99,255,0.6)', border: '#6c63ff', class: 'dept-product' },
+  'Revenue/GTM': { bg: 'rgba(0,212,170,0.6)', border: '#00d4aa', class: 'dept-revenue' },
+  'Support/CX': { bg: 'rgba(255,107,138,0.6)', border: '#ff6b8a', class: 'dept-support' },
+  'Finance': { bg: 'rgba(255,169,77,0.6)', border: '#ffa94d', class: 'dept-finance' },
+  'All-Company': { bg: 'rgba(77,171,247,0.6)', border: '#4dabf7', class: 'dept-all' },
+};
+
+const CHART_PALETTE = [
+  '#6c63ff','#00d4aa','#ff6b8a','#ffa94d','#4dabf7',
+  '#a29bfe','#55efc4','#fd79a8','#fdcb6e','#74b9ff'
+];
+
+let charts = {};
+let activeFilter = 'all';
+
+function parseCSV(text) {
+  const lines = text.split('\n').filter(l => l.trim());
+  return lines.map(line => {
+    const fields = [];
+    let current = '', inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') { inQuotes = !inQuotes; continue; }
+      if (ch === ',' && !inQuotes) { fields.push(current.trim()); current = ''; continue; }
+      current += ch;
+    }
+    fields.push(current.trim());
+    return fields;
+  });
+}
+
+function parseValue(val) {
+  if (!val || val === '') return null;
+  const cleaned = val.replace('%', '').replace('$', '').replace(/,/g, '');
+  const num = parseFloat(cleaned);
+  return isNaN(num) ? null : num;
+}
+
+function parseDate(str) {
+  if (!str) return null;
+  // Handle M/D/YYYY format
+  const parts = str.split('/');
+  if (parts.length >= 3) {
+    const month = parseInt(parts[0]) - 1;
+    const day = parseInt(parts[1]);
+    const year = parseInt(parts[2]);
+    if (!isNaN(month) && !isNaN(day) && !isNaN(year)) return new Date(year, month, day);
+  }
+  // Handle M/D format (missing year — assume 2026)
+  if (parts.length === 2) {
+    const month = parseInt(parts[0]) - 1;
+    const day = parseInt(parts[1]);
+    if (!isNaN(month) && !isNaN(day)) return new Date(2026, month, day);
+  }
+  // Fallback: try native parse
+  const d = new Date(str);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function formatDate(d) {
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function formatValue(val, unit) {
+  if (val === null || val === undefined) return '—';
+  if (unit === 'Percentage') return val.toFixed(1) + '%';
+  if (unit === 'US Dollars') return '$' + val.toLocaleString();
+  if (unit === 'Ratio') return (val * 100).toFixed(0) + '%';
+  if (Number.isInteger(val)) return val.toLocaleString();
+  return val.toFixed(1);
+}
+
+// JSONP approach — injects a <script> tag so the browser sends Google auth
+// cookies automatically, bypassing CORS restrictions on local files.
+function fetchSheetData() {
+  return new Promise((resolve, reject) => {
+    const cbName = '_gvizCallback_' + Date.now();
+    const timeout = setTimeout(() => {
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      reject(new Error('Request timed out. Make sure this sheet is accessible to your Google account.'));
+    }, 15000);
+
+    window[cbName] = function(response) {
+      clearTimeout(timeout);
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      try {
+        if (response.status === 'error') {
+          throw new Error(response.errors.map(e => e.detailed_message || e.message).join('; '));
+        }
+        // Convert Google Viz JSON to CSV-like rows
+        const cols = response.table.cols;
+        const rows = response.table.rows;
+        const csvLines = [];
+        csvLines.push(cols.map(c => '"' + (c.label || '') + '"').join(','));
+        rows.forEach(row => {
+          const cells = row.c.map(cell => {
+            if (!cell || cell.v === null || cell.v === undefined) return '""';
+            let val = cell.f || String(cell.v); // prefer formatted value
+            // Handle Date objects from gviz
+            if (typeof cell.v === 'string' && cell.v.startsWith('Date(')) {
+              const match = cell.v.match(/Date\((\d+),(\d+),(\d+)/);
+              if (match) {
+                val = `${parseInt(match[2])+1}/${match[3]}/${match[1]}`;
+              }
+            }
+            return '"' + val.replace(/"/g, '""') + '"';
+          });
+          csvLines.push(cells.join(','));
+        });
+        resolve(csvLines.join('\n'));
+      } catch(e) {
+        reject(e);
+      }
+    };
+
+    const script = document.createElement('script');
+    script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?gid=${TRACKER_GID}&tqx=responseHandler:${cbName}`;
+    script.onerror = () => {
+      clearTimeout(timeout);
+      delete window[cbName];
+      reject(new Error('Failed to load data from Google Sheets. Check your internet connection and Google login.'));
+    };
+    document.head.appendChild(script);
+  });
+}
+
+function processData(csvText) {
+  const rows = parseCSV(csvText);
+  const header = rows[0];
+  const data = rows.slice(1).map(r => ({
+    date: r[0],
+    period: r[1],
+    metric: r[2],
+    value: r[3],
+    target: r[4],
+  })).filter(r => r.date && r.metric);
+
+  // Group by metric
+  const byMetric = {};
+  data.forEach(r => {
+    if (!byMetric[r.metric]) byMetric[r.metric] = [];
+    byMetric[r.metric].push(r);
+  });
+
+  // Sort each metric's entries by date
+  Object.values(byMetric).forEach(arr => {
+    arr.sort((a, b) => {
+      const da = parseDate(a.date);
+      const db = parseDate(b.date);
+      return (da || 0) - (db || 0);
+    });
+  });
+
+  return byMetric;
+}
+
+function getTrend(entries) {
+  const vals = entries.map(e => parseValue(e.value)).filter(v => v !== null);
+  if (vals.length < 2) return 'flat';
+  const last = vals[vals.length - 1];
+  const prev = vals[vals.length - 2];
+  if (last > prev) return 'up';
+  if (last < prev) return 'down';
+  return 'flat';
+}
+
+function renderFilters() {
+  const depts = ['all', ...new Set(Object.values(META).map(m => m.dept))];
+  const container = document.getElementById('filters');
+  container.innerHTML = depts.map(d =>
+    `<button class="filter-btn ${d === activeFilter ? 'active' : ''}" onclick="setFilter('${d}')">${d === 'all' ? 'All Departments' : d}</button>`
+  ).join('');
+}
+
+function setFilter(dept) {
+  activeFilter = dept;
+  renderFilters();
+  renderDashboard(window._lastData);
+}
+
+function renderDashboard(byMetric) {
+  window._lastData = byMetric;
+  const content = document.getElementById('content');
+
+  // Determine which metrics to show
+  const metrics = Object.keys(byMetric).filter(m => {
+    if (activeFilter === 'all') return true;
+    const meta = META[m];
+    return meta && meta.dept === activeFilter;
+  });
+
+  // Group by department
+  const byDept = {};
+  metrics.forEach(m => {
+    const dept = (META[m] || {}).dept || 'Other';
+    if (!byDept[dept]) byDept[dept] = [];
+    byDept[dept].push(m);
+  });
+
+  let html = '';
+
+  // ── KPI Summary Cards ──
+  html += '<div class="kpi-grid">';
+  // Show North Stars first, then KPIs
+  const northStars = metrics.filter(m => META[m] && META[m].type === 'North Star');
+  const kpis = metrics.filter(m => !northStars.includes(m));
+  const orderedMetrics = [...northStars, ...kpis];
+
+  orderedMetrics.forEach(metric => {
+    const entries = byMetric[metric];
+    const meta = META[metric] || { dept: 'Other', unit: '', type: 'KPI' };
+    const deptStyle = DEPT_COLORS[meta.dept] || DEPT_COLORS['All-Company'];
+    const latestEntry = entries[entries.length - 1];
+    const val = parseValue(latestEntry.value);
+    const target = parseValue(latestEntry.target);
+    const trend = getTrend(entries);
+    const trendIcon = trend === 'up' ? '&#9650;' : trend === 'down' ? '&#9660;' : '&#9654;';
+    const isNPSorNeg = metric === 'NPS' || metric.includes('burn');
+    const trendClass = trend === 'up' ? (isNPSorNeg ? 'trend-up' : 'trend-up') : trend === 'down' ? (isNPSorNeg ? 'trend-down' : 'trend-down') : 'trend-flat';
+    const starBadge = meta.type === 'North Star' ? ' &#9733;' : '';
+
+    html += `
+      <div class="kpi-card">
+        <div class="label" title="${metric}">${metric}${starBadge}</div>
+        <div class="value">${formatValue(val, meta.unit)}</div>
+        <div class="meta">
+          <span class="${trendClass}">${trendIcon}</span>
+          ${target !== null ? `<span class="target">Target: ${formatValue(target, meta.unit)}</span>` : ''}
+        </div>
+        <span class="dept-tag ${deptStyle.class}">${meta.dept}</span>
+      </div>`;
+  });
+  html += '</div>';
+
+  // ── Charts by Department ──
+  const deptOrder = ['All-Company', 'Revenue/GTM', 'Product', 'Support/CX', 'Finance'];
+  const deptIcons = { 'All-Company': '&#9733;', 'Revenue/GTM': '&#128200;', 'Product': '&#9881;', 'Support/CX': '&#128172;', 'Finance': '&#128176;' };
+
+  deptOrder.forEach(dept => {
+    const deptMetrics = byDept[dept];
+    if (!deptMetrics || deptMetrics.length === 0) return;
+    const deptColor = DEPT_COLORS[dept] || DEPT_COLORS['All-Company'];
+
+    html += `<div class="section-title">
+      <span class="icon" style="background:${deptColor.bg}">${deptIcons[dept] || '&#9679;'}</span>
+      ${dept}
+    </div>`;
+
+    html += '<div class="chart-grid">';
+
+    // Group related metrics into chart groupings
+    const velocityMetrics = deptMetrics.filter(m => m.startsWith('Velocity-Share'));
+    const otherMetrics = deptMetrics.filter(m => !m.startsWith('Velocity-Share'));
+
+    // Individual charts for each non-velocity metric
+    otherMetrics.forEach(metric => {
+      const canvasId = 'chart_' + metric.replace(/[^a-zA-Z0-9]/g, '_');
+      const meta = META[metric] || { unit: '' };
+      html += `
+        <div class="chart-card">
+          <h3>${metric}</h3>
+          <div class="chart-subtitle">${meta.type === 'North Star' ? '&#9733; North Star' : 'KPI'} &middot; ${meta.unit || 'Value'}</div>
+          <div class="chart-wrap"><canvas id="${canvasId}"></canvas></div>
+        </div>`;
+    });
+
+    // Combined velocity chart
+    if (velocityMetrics.length > 0) {
+      html += `
+        <div class="chart-card">
+          <h3>Engineering Velocity Share</h3>
+          <div class="chart-subtitle">KPI &middot; Share of velocity by area</div>
+          <div class="chart-wrap"><canvas id="chart_velocity"></canvas></div>
+        </div>`;
+    }
+
+    html += '</div>';
+  });
+
+  content.innerHTML = html;
+
+  // ── Destroy old charts ──
+  Object.values(charts).forEach(c => c.destroy());
+  charts = {};
+
+  // ── Create Charts ──
+  Chart.defaults.color = '#8b8fa3';
+  Chart.defaults.borderColor = 'rgba(45,49,65,0.5)';
+  Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif';
+
+  deptOrder.forEach(dept => {
+    const deptMetrics = byDept[dept];
+    if (!deptMetrics) return;
+    const deptColor = DEPT_COLORS[dept] || DEPT_COLORS['All-Company'];
+
+    const velocityMetrics = deptMetrics.filter(m => m.startsWith('Velocity-Share'));
+    const otherMetrics = deptMetrics.filter(m => !m.startsWith('Velocity-Share'));
+
+    otherMetrics.forEach((metric, idx) => {
+      const canvasId = 'chart_' + metric.replace(/[^a-zA-Z0-9]/g, '_');
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+
+      const entries = byMetric[metric];
+      const meta = META[metric] || { unit: '' };
+      const labels = entries.map(e => { const d = parseDate(e.date); return d ? formatDate(d) : e.date; });
+      const values = entries.map(e => parseValue(e.value));
+      const targets = entries.map(e => parseValue(e.target));
+      const hasTarget = targets.some(t => t !== null);
+      const color = deptColor.border;
+
+      const datasets = [{
+        label: metric,
+        data: values,
+        borderColor: color,
+        backgroundColor: color.replace(')', ',0.1)').replace('rgb', 'rgba'),
+        fill: true,
+        tension: 0.35,
+        pointRadius: 4,
+        pointHoverRadius: 7,
+        pointBackgroundColor: color,
+        borderWidth: 2.5,
+      }];
+
+      if (hasTarget) {
+        datasets.push({
+          label: 'Target',
+          data: targets,
+          borderColor: 'rgba(255,255,255,0.25)',
+          borderDash: [6, 4],
+          borderWidth: 1.5,
+          pointRadius: 0,
+          fill: false,
+          tension: 0,
+        });
+      }
+
+      charts[canvasId] = new Chart(canvas, {
+        type: 'line',
+        data: { labels, datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { intersect: false, mode: 'index' },
+          plugins: {
+            legend: { display: hasTarget, position: 'top', labels: { boxWidth: 12, padding: 12, font: { size: 11 } } },
+            tooltip: {
+              backgroundColor: '#1a1d27',
+              borderColor: '#2d3141',
+              borderWidth: 1,
+              titleFont: { size: 12 },
+              bodyFont: { size: 12 },
+              padding: 10,
+              cornerRadius: 8,
+              callbacks: {
+                label: ctx => `${ctx.dataset.label}: ${formatValue(ctx.parsed.y, meta.unit)}`
+              }
+            }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+            y: {
+              grid: { color: 'rgba(45,49,65,0.4)' },
+              ticks: {
+                font: { size: 11 },
+                callback: v => formatValue(v, meta.unit)
+              }
+            }
+          }
+        }
+      });
+    });
+
+    // Velocity stacked bar chart
+    if (velocityMetrics.length > 0) {
+      const canvas = document.getElementById('chart_velocity');
+      if (canvas) {
+        // Collect all dates
+        const allDates = new Set();
+        velocityMetrics.forEach(m => byMetric[m].forEach(e => allDates.add(e.date)));
+        const sortedDates = [...allDates].sort((a, b) => parseDate(a) - parseDate(b));
+        const labels = sortedDates.map(d => { const p = parseDate(d); return p ? formatDate(p) : d; });
+
+        const shortNames = {
+          'Velocity-Share for Open ESP Integrations - Specifically': 'ESP Integrations',
+          'Velocity-Share for Sales Engineering': 'Sales Eng',
+          'Velocity-Share for Service': 'Service',
+          'Velocity-Share for Letterhead Core': 'Core Product'
+        };
+        const vColors = ['#6c63ff', '#00d4aa', '#ffa94d', '#ff6b8a'];
+
+        const datasets = velocityMetrics.map((m, i) => {
+          const entries = byMetric[m];
+          const dateMap = {};
+          entries.forEach(e => dateMap[e.date] = parseValue(e.value));
+          return {
+            label: shortNames[m] || m,
+            data: sortedDates.map(d => dateMap[d] !== undefined ? dateMap[d] * 100 : null),
+            backgroundColor: vColors[i % vColors.length] + 'cc',
+            borderColor: vColors[i % vColors.length],
+            borderWidth: 1,
+            borderRadius: 3,
+          };
+        });
+
+        charts['chart_velocity'] = new Chart(canvas, {
+          type: 'bar',
+          data: { labels, datasets },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { intersect: false, mode: 'index' },
+            plugins: {
+              legend: { position: 'top', labels: { boxWidth: 10, padding: 8, font: { size: 10 } } },
+              tooltip: {
+                backgroundColor: '#1a1d27',
+                borderColor: '#2d3141',
+                borderWidth: 1,
+                padding: 10,
+                cornerRadius: 8,
+                callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(0)}%` }
+              }
+            },
+            scales: {
+              x: { stacked: true, grid: { display: false }, ticks: { font: { size: 11 } } },
+              y: {
+                stacked: true,
+                grid: { color: 'rgba(45,49,65,0.4)' },
+                ticks: { font: { size: 11 }, callback: v => v + '%' },
+                max: 100
+              }
+            }
+          }
+        });
+      }
+    }
+  });
+}
+
+async function refreshData() {
+  const statusDot = document.getElementById('statusDot');
+  const statusText = document.getElementById('statusText');
+  const lastUpdated = document.getElementById('lastUpdated');
+  const errorBanner = document.getElementById('errorBanner');
+
+  statusDot.style.background = 'var(--yellow)';
+  statusText.textContent = 'Refreshing...';
+
+  try {
+    const csvText = await fetchSheetData();
+    const byMetric = processData(csvText);
+    renderFilters();
+    renderDashboard(byMetric);
+
+    const now = new Date();
+    lastUpdated.textContent = `Live from Google Sheets \u2022 Last refresh: ${now.toLocaleTimeString()}`;
+    statusDot.style.background = 'var(--green)';
+    statusText.textContent = 'Connected';
+    errorBanner.style.display = 'none';
+  } catch (err) {
+    statusDot.style.background = 'var(--red)';
+    statusText.textContent = 'Error';
+    errorBanner.innerHTML = `<strong>Could not fetch data:</strong> ${err.message}<br><br>
+      <strong>To fix this:</strong> In Google Sheets, go to <em>File → Share → Publish to web</em>, select the <em>Tracker</em> sheet, and click Publish. Then refresh this page.
+      <br>Alternatively, make sure the sheet is shared with "Anyone with the link" access.`;
+    errorBanner.style.display = 'block';
+    console.error(err);
+  }
+}
+
+// init is called after successful Google Sign-In
+function init() {
+  refreshData();
+  // Auto-refresh every 5 minutes
+  if (!window._refreshInterval) {
+    window._refreshInterval = setInterval(refreshData, 5 * 60 * 1000);
+  }
+}
+</script>
+</body>
+</html>
