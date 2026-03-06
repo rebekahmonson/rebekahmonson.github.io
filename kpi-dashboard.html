@@ -172,9 +172,11 @@
     margin-top: 8px;
   }
   .dept-product { background: rgba(108,99,255,0.15); color: #a29bfe; }
+  .dept-engineering { background: rgba(0,184,255,0.15); color: #00b8ff; }
   .dept-revenue { background: rgba(0,212,170,0.15); color: #00d4aa; }
   .dept-support { background: rgba(255,107,138,0.15); color: #ff6b8a; }
   .dept-finance { background: rgba(255,169,77,0.15); color: #ffa94d; }
+  .dept-operations { background: rgba(162,155,254,0.15); color: #a29bfe; }
   .dept-all { background: rgba(77,171,247,0.15); color: #4dabf7; }
 
   /* Chart Grid */
@@ -529,36 +531,91 @@ window.addEventListener('load', function() {
 const SHEET_ID = '1g8FOuKK14xUkL8S8pwKJG-fBdEeyn65dugJn_GYTRrg';
 const TRACKER_GID = '1637880674';
 
-// Metric metadata (from Definitions tab)
-const META = {
-  'Net New CARR':          { dept: 'All-Company', type: 'North Star', unit: 'US Dollars', owner: 'Mallory Newcomer' },
-  'Monthly burn vs plan':  { dept: 'Finance', type: 'KPI', unit: 'Percentage', owner: 'Mallory Newcomer' },
-  'New customers signed':  { dept: 'Revenue/GTM', type: 'North Star', unit: 'Number', owner: 'Brian Wiechowski' },
-  'Pipeline Coverage Deals': { dept: 'Revenue/GTM', type: 'KPI', unit: 'Number', owner: 'Brian Wiechowski' },
-  'Pipeline Coverage ARR': { dept: 'Revenue/GTM', type: 'KPI', unit: 'US Dollars', owner: 'Brian Wiechowski' },
-  'Win rate':              { dept: 'Revenue/GTM', type: 'KPI', unit: 'Percentage', owner: 'Brian Wiechowski' },
-  '[ICP Deals Created Past Validation Stage]': { dept: 'Revenue/GTM', type: 'KPI', unit: 'Number', owner: 'Brian Wiechowski' },
-  'NPS':                   { dept: 'Support/CX', type: 'North Star', unit: 'Score', owner: 'Michael Schofield' },
-  'CSAT':                  { dept: 'Support/CX', type: 'KPI', unit: 'Score', owner: 'Michael Schofield' },
-  'Time to First Value':   { dept: 'Support/CX', type: 'North Star', unit: 'Minutes', owner: 'Michael Schofield' },
-  'Support Ticket Time to Close': { dept: 'Support/CX', type: 'KPI', unit: 'Days', owner: 'Michael Schofield' },
-  'Support Resolution Quality': { dept: 'Support/CX', type: 'KPI', unit: 'Score', owner: 'Michael Schofield' },
-  'Open Crits':            { dept: 'Support/CX', type: 'KPI', unit: 'Number', owner: 'Michael Schofield' },
-  'Feature Cadence':       { dept: 'Product', type: 'KPI', unit: 'Number', owner: 'Michael Schofield' },
-  'Feature Lead Time':     { dept: 'Product', type: 'KPI', unit: 'Days', owner: 'Michael Schofield' },
-  'Weekly active channels':{ dept: 'Product', type: 'North Star', unit: 'Number', owner: 'Michael Schofield' },
-  'Global Open Rate':      { dept: 'All-Company', type: 'KPI', unit: 'Percentage', owner: '' },
-  'Velocity-Share for Open ESP Integrations - Specifically': { dept: 'Product', type: 'KPI', unit: 'Ratio', owner: '' },
-  'Velocity-Share for Sales Engineering': { dept: 'Product', type: 'KPI', unit: 'Ratio', owner: '' },
-  'Velocity-Share for Service':           { dept: 'Product', type: 'KPI', unit: 'Ratio', owner: '' },
-  'Velocity-Share for Letterhead Core':   { dept: 'Product', type: 'KPI', unit: 'Ratio', owner: '' },
-};
+// Metric metadata — loaded dynamically from the Definitions sheet
+let META = {};
+const DEFINITIONS_GID = '0'; // GID for Definitions tab
+
+// Unit inference from metric name/definition
+function inferUnit(metricName, definition) {
+  const n = (metricName || '').toLowerCase();
+  const d = (definition || '').toLowerCase();
+  if (n.includes('carr') || n.includes('arr') || n.includes('pipeline coverage arr')) return 'US Dollars';
+  if (n.includes('burn') || n.includes('rate') || n.includes('win rate')) return 'Percentage';
+  if (n.includes('velocity-share')) return 'Ratio';
+  if (n.includes('nps') || n.includes('csat') || n.includes('quality')) return 'Score';
+  if (n.includes('lead time') || n.includes('time to close')) return 'Days';
+  if (n.includes('time to first value')) return 'Minutes';
+  if (d.includes('percentage') || d.includes('%')) return 'Percentage';
+  if (d.includes('dollar') || d.includes('$') || d.includes('arr')) return 'US Dollars';
+  return 'Number';
+}
+
+async function fetchDefinitions() {
+  if (!accessToken) return;
+
+  // Find the Definitions sheet name from metadata
+  let defSheetName = 'Definitions';
+  try {
+    const metaResp = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}?fields=sheets.properties`,
+      { headers: { 'Authorization': 'Bearer ' + accessToken } }
+    );
+    if (metaResp.ok) {
+      const metaData = await metaResp.json();
+      const defSheet = metaData.sheets.find(s => s.properties.sheetId === parseInt(DEFINITIONS_GID));
+      if (defSheet) defSheetName = defSheet.properties.title;
+    }
+  } catch(e) { console.warn('Could not resolve Definitions sheet name:', e); }
+
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(defSheetName)}`;
+  const resp = await fetch(url, { headers: { 'Authorization': 'Bearer ' + accessToken } });
+  if (!resp.ok) {
+    console.warn('Could not fetch Definitions sheet, using fallback META');
+    return;
+  }
+  const data = await resp.json();
+  if (!data.values || data.values.length < 2) return;
+
+  // Parse header to find column indices
+  const header = data.values[0].map(h => (h || '').trim().toLowerCase());
+  const nameIdx = header.findIndex(h => h.includes('metric name') || h === 'metric name');
+  const deptIdx = header.findIndex(h => h.includes('department') || h === 'department');
+  const typeIdx = header.findIndex(h => h.includes('type') || h === 'type');
+  const ownerIdx = header.findIndex(h => h.includes('owner') || h === 'owner');
+  const defIdx = header.findIndex(h => h.includes('definition') || h.includes('formula'));
+
+  if (nameIdx === -1) {
+    console.warn('Definitions sheet missing Metric name column');
+    return;
+  }
+
+  META = {};
+  data.values.slice(1).forEach(row => {
+    const metricName = (row[nameIdx] || '').trim();
+    if (!metricName) return;
+    const dept = deptIdx >= 0 ? (row[deptIdx] || '').trim() : 'Other';
+    const type = typeIdx >= 0 ? (row[typeIdx] || '').trim() : 'KPI';
+    const owner = ownerIdx >= 0 ? (row[ownerIdx] || '').trim() : '';
+    const definition = defIdx >= 0 ? (row[defIdx] || '').trim() : '';
+    META[metricName] = {
+      dept: dept || 'Other',
+      type: type || 'KPI',
+      unit: inferUnit(metricName, definition),
+      owner: owner,
+    };
+  });
+
+  console.log('Loaded definitions for', Object.keys(META).length, 'metrics');
+}
 
 const DEPT_COLORS = {
   'Product': { bg: 'rgba(108,99,255,0.6)', border: '#6c63ff', class: 'dept-product' },
+  'Engineering': { bg: 'rgba(0,184,255,0.6)', border: '#00b8ff', class: 'dept-engineering' },
   'Revenue/GTM': { bg: 'rgba(0,212,170,0.6)', border: '#00d4aa', class: 'dept-revenue' },
   'Support/CX': { bg: 'rgba(255,107,138,0.6)', border: '#ff6b8a', class: 'dept-support' },
+  'CX': { bg: 'rgba(255,107,138,0.6)', border: '#ff6b8a', class: 'dept-support' },
   'Finance': { bg: 'rgba(255,169,77,0.6)', border: '#ffa94d', class: 'dept-finance' },
+  'Operations': { bg: 'rgba(162,155,254,0.6)', border: '#a29bfe', class: 'dept-operations' },
   'All-Company': { bg: 'rgba(77,171,247,0.6)', border: '#4dabf7', class: 'dept-all' },
 };
 
@@ -794,8 +851,8 @@ function renderDashboard(byMetric) {
   html += '</div>';
 
   // ── Charts by Department ──
-  const deptOrder = ['All-Company', 'Revenue/GTM', 'Product', 'Support/CX', 'Finance'];
-  const deptIcons = { 'All-Company': '&#9733;', 'Revenue/GTM': '&#128200;', 'Product': '&#9881;', 'Support/CX': '&#128172;', 'Finance': '&#128176;' };
+  const deptOrder = ['All-Company', 'Revenue/GTM', 'Product', 'Engineering', 'Support/CX', 'CX', 'Finance', 'Operations', 'Other'];
+  const deptIcons = { 'All-Company': '&#9733;', 'Revenue/GTM': '&#128200;', 'Product': '&#9881;', 'Engineering': '&#128736;', 'Support/CX': '&#128172;', 'CX': '&#128172;', 'Finance': '&#128176;', 'Operations': '&#9881;', 'Other': '&#9679;' };
 
   deptOrder.forEach(dept => {
     const deptMetrics = byDept[dept];
@@ -1008,8 +1065,18 @@ async function refreshData() {
   statusText.textContent = 'Refreshing...';
 
   try {
+    // Fetch definitions first (to get department mappings), then tracker data
+    await fetchDefinitions();
     const rows = await fetchSheetData();
     const byMetric = processData(rows);
+
+    // Also assign META for any tracker metrics not in Definitions
+    Object.keys(byMetric).forEach(m => {
+      if (!META[m]) {
+        META[m] = { dept: 'Other', type: 'KPI', unit: inferUnit(m, ''), owner: '' };
+      }
+    });
+
     renderFilters();
     renderDashboard(byMetric);
 
