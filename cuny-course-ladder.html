@@ -8,6 +8,7 @@
   :root{
     --bg:#14161a; --panel:#1c1f25; --ink:#f2f3f5; --dim:#a8afb9;
     --hw:#2d4a6b; --hw-edge:#7ea4cc; --cls:#3a3f47; --cls-edge:#868e99;
+    --lec:#2f3a33; --lec-edge:#7da58a;
     --gold:#d4bc7a; --gold-bg:#4a3f1f; --thread:#d4bc7a;
   }
   *{box-sizing:border-box}
@@ -18,12 +19,13 @@
   .row{background:var(--panel);border-radius:14px;padding:14px 16px 16px;margin-bottom:46px}
   .row h2{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin:0 0 10px;font-weight:650}
   .cards{display:flex;align-items:stretch;gap:0}
-  .card{border-radius:10px;padding:10px 12px;width:196px;flex:0 0 auto;font-size:12.5px}
+  .card{border-radius:10px;padding:10px 12px;width:206px;flex:0 0 auto;font-size:12.5px}
   .card .t{font-weight:650;font-size:12.5px;margin-bottom:4px}
   .card .d{color:#d6dae0}
   .card .out{margin-top:6px;color:var(--gold);font-size:12px}
   .hwcard{background:var(--hw);border:1.5px solid var(--hw-edge)}
   .clscard{background:var(--cls);border:1px solid var(--cls-edge)}
+  .leccard{background:var(--lec);border:1px solid var(--lec-edge)}
   .flow{display:flex;align-items:center;color:var(--dim);padding:0 7px;font-size:16px;flex:0 0 auto}
   .take{background:var(--gold-bg);border:1.5px solid var(--gold);border-radius:12px;padding:14px 18px;width:460px;margin:0 auto;text-align:center}
   .take .t{font-weight:700;color:var(--gold);letter-spacing:.06em;font-size:12px;text-transform:uppercase;margin-bottom:4px}
@@ -33,7 +35,7 @@
 </head>
 <body>
 <h1>How the homework and classwork ladder</h1>
-<p class="sub">Blue = homework (one exercise per week, in the app) · Gray = class blocks in clock order · Gold threads = artifacts that carry the course</p>
+<p class="sub">Blue = pre-work (solo, AI-assisted, in the app) · Green = lecture half · Gray = collaborative half · Gold threads = artifacts that carry the course</p>
 
 <div class="board" id="board">
   <svg class="threads" id="threads"></svg>
@@ -41,48 +43,52 @@
   <section class="row">
     <h2>Session 1 · Foundations · Oct 6</h2>
     <div class="cards">
-      <div class="card hwcard" id="hw1"><div class="t">HW · Product interview</div><div class="d">AI interviews you about one product from your org.</div><div class="out">→ brief: summary, JTBD candidates, canvas bones, one question you couldn't answer</div></div>
+      <div class="card hwcard" id="hw1"><div class="t">HW · Product interview</div><div class="d">AI interviews you about one product from your org.</div><div class="out">→ brief: summary, sharpened JTBD + problem statement, canvas bones</div></div>
       <div class="flow">→</div>
-      <div class="card clscard" id="c1a"><div class="t">11:55 · Sharpen the job</div><div class="d">Top JTBD through two models, side by side.</div><div class="out">→ problem statement + success signal</div></div>
+      <div class="card leccard" id="c1a"><div class="t">11:10 · Lecture + live demo</div><div class="d">Foundations, lifecycle at AI speed, the three roles. Demo: raw idea to prototype brief, then group discussion.</div></div>
       <div class="flow">→</div>
-      <div class="card clscard" id="c1b"><div class="t">12:15 · Lean Canvas breakout</div><div class="d">Role-play teams, seeded with your canvas bones.</div><div class="out">→ team canvas to gallery</div></div>
+      <div class="card clscard" id="c1b"><div class="t">12:00 · Lean Canvas role-play</div><div class="d">Team breakout with revenue/tech/editorial/audience roles, seeded with pre-work briefs. Share-out follows.</div><div class="out">→ team canvas to gallery</div></div>
     </div>
   </section>
 
   <section class="row">
     <h2>Session 2 · Operations · Oct 13</h2>
     <div class="cards">
-      <div class="card hwcard" id="hw2"><div class="t">HW · Draft your spec</div><div class="d">AI turns your brief + canvas into a draft JTBD spec. Posted before class.</div><div class="out">→ draft spec to gallery</div></div>
+      <div class="card hwcard" id="hw2"><div class="t">HW · Draft your spec + ritual audit</div><div class="d">AI turns your brief + canvas into a draft JTBD spec, posted to the gallery. Then it prices one bad meeting.</div><div class="out">→ draft spec + ritual price tag</div></div>
       <div class="flow">→</div>
-      <div class="card clscard" id="c2a"><div class="t">11:00 · Build kickoff</div><div class="d">Class picks one spec. Build runs on screen all session.</div></div>
+      <div class="card clscard" id="c2a"><div class="t">11:00 · Kickoff + price-tag poll</div><div class="d">Class picks one spec, build runs all session. Biggest ritual price tags on screen.</div></div>
       <div class="flow">→</div>
-      <div class="card clscard" id="c2b"><div class="t">11:30 · Spec revision</div><div class="d">Rework your draft with the lecture lens, then a partner swap.</div><div class="out">→ revised spec to gallery</div></div>
+      <div class="card leccard" id="c2e"><div class="t">11:10 · Lecture</div><div class="d">Ops fundamentals + how we spec now, recreated Letterhead artifacts side by side.</div></div>
       <div class="flow">→</div>
-      <div class="card clscard" id="c2c"><div class="t">12:00 · Ritual audit, live</div><div class="d">Price tags pop on screen. Pairs pitch redesigns.</div></div>
+      <div class="card clscard" id="c2b"><div class="t">12:00 · Spec workshop</div><div class="d">Small teams rework each member's spec with the lecture lens.</div><div class="out">→ revised specs to gallery</div></div>
       <div class="flow">→</div>
-      <div class="card clscard" id="c2d"><div class="t">12:30 · Build reveal + picking your spots</div><div class="d">What did ~90 minutes buy? Would you ship it? Where does AI belong in your process?</div></div>
+      <div class="card clscard" id="c2d"><div class="t">12:40 · Build reveal</div><div class="d">What did the session buy? Would you ship it? Where does AI belong in your process?</div></div>
     </div>
   </section>
 
   <section class="row">
     <h2>Session 3 · Strategy · Oct 20</h2>
     <div class="cards">
-      <div class="card hwcard" id="hw3"><div class="t">HW · Skeptical stakeholder</div><div class="d">AI plays a cranky customer, colleague, or board member. Challenges your assumptions, pushes for kill criteria.</div><div class="out">→ scariest assumption + kill criteria</div></div>
+      <div class="card hwcard" id="hw3"><div class="t">HW · Case packet + skeptical stakeholder</div><div class="d">Read the case, vote scale-or-kill in the app. Then AI plays a cranky stakeholder attacking your own product's assumptions.</div><div class="out">→ position vote + scariest assumption + kill criteria</div></div>
       <div class="flow">→</div>
       <div class="card clscard" id="c3a"><div class="t">11:00 · Callback + poll</div><div class="d">Build callback, then scariest assumptions on screen.</div></div>
       <div class="flow">→</div>
-      <div class="card clscard" id="c3b"><div class="t">11:35 · Assistant & stand-in drill</div><div class="d">Delegate the groundwork, then defend your call.</div></div>
+      <div class="card leccard" id="c3d"><div class="t">11:10 · Lecture</div><div class="d">Strategy, metrics, prioritization: focus is the scarce resource.</div></div>
       <div class="flow">→</div>
-      <div class="card clscard" id="c3c"><div class="t">12:00 · Case debate</div><div class="d">Scale it vs. kill it, frameworks as evidence.</div></div>
+      <div class="card clscard" id="c3b"><div class="t">12:00 · Case clinic</div><div class="d">Mixed teams (scale + kill voters) produce a recommendation + kill criteria.</div></div>
+      <div class="flow">→</div>
+      <div class="card clscard" id="c3c"><div class="t">12:35 · Full group + reveal</div><div class="d">Teams argue, cohort votes, then what actually happened. Synthesis back to your product.</div></div>
     </div>
   </section>
 
   <section class="row">
     <h2>Session 4 · Culture + Guest · Oct 27</h2>
     <div class="cards">
-      <div class="card hwcard" id="hw4"><div class="t">HW · Assemble your playbook</div><div class="d">AI pulls your four weeks of outputs into a draft playbook.</div><div class="out">→ playbook + 90-day move</div></div>
+      <div class="card hwcard" id="hw4"><div class="t">HW · Assemble your playbook</div><div class="d">AI pulls your four weeks of outputs into a draft playbook.</div><div class="out">→ playbook + 90-day move + guest question</div></div>
       <div class="flow">→</div>
       <div class="card clscard" id="c4a"><div class="t">11:00 · Playbook discussion</div><div class="d">What did four weeks of artifacts add up to?</div></div>
+      <div class="flow">→</div>
+      <div class="card leccard" id="c4d"><div class="t">11:15 · Lecture</div><div class="d">Culture, org design deep-dive, leading change.</div></div>
       <div class="flow">→</div>
       <div class="card clscard" id="c4b"><div class="t">11:45 · Guest Q&A</div><div class="d">Leading product culture through the AI shift.</div><div class="out">→ debrief: what do we steal for our playbooks?</div></div>
       <div class="flow">→</div>
@@ -103,10 +109,9 @@ function draw(){
   const P=id=>{const r=document.getElementById(id).getBoundingClientRect();return{cx:r.left-b.left+r.width/2,top:r.top-b.top,bot:r.top-b.top+r.height,left:r.left-b.left,right:r.left-b.left+r.width,cy:r.top-b.top+r.height/2}};
   function thread(fromId,toId,label,opts={}){
     const f=P(fromId),t=P(toId);
-    let x1,y1,x2,y2,c1x,c1y,c2x,c2y;
-    x1=f.cx;y1=f.bot;x2=t.cx;y2=t.top;
+    let x1=f.cx,y1=f.bot,x2=t.cx,y2=t.top;
     const dy=(y2-y1);
-    c1x=x1+(opts.bow||0);c1y=y1+dy*0.5;c2x=x2+(opts.bow||0);c2y=y2-dy*0.5;
+    const c1x=x1+(opts.bow||0),c1y=y1+dy*0.5,c2x=x2+(opts.bow||0),c2y=y2-dy*0.5;
     const path=document.createElementNS('http://www.w3.org/2000/svg','path');
     path.setAttribute('d',`M ${x1} ${y1} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${x2} ${y2}`);
     path.setAttribute('fill','none');path.setAttribute('stroke','#d4bc7a');
@@ -123,8 +128,8 @@ function draw(){
   }
   thread('c1b','hw2','brief + canvas seed the spec',{dyl:-4});
   thread('c2d','c3a','what would it take to ship it?',{dyl:-4});
-  thread('c2b','hw4','revised spec feeds the playbook',{bow:-320,dyl:0,dx:-40});
-  thread('c3c','hw4','assumptions + kill criteria feed the playbook',{dyl:-4});
+  thread('c2b','hw4','revised spec feeds the playbook',{bow:-260,dx:-30});
+  thread('c3c','hw4','kill criteria feed the playbook',{dyl:-4});
   thread('c4c','take','',{});
 }
 window.addEventListener('load',draw);
